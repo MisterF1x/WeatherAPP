@@ -1,0 +1,116 @@
+// COLORS
+$color-primary: #e5e0ff;
+$color-primary-light: #000;
+$color-primary-dark: #28be8c;
+
+$color-secondary-light: #fff2f2;
+$color-secondary-dark: #ff7730;
+
+$color-tertiary-light: #f7e9d7;
+$color-tertiary-dark: #8ea7e9;
+
+$color-grey-light-1: #f7f7f7;
+$color-grey-light-2: #eee;
+
+$color-grey-dark: #727272;
+$color-grey-dark-2: #9999994f;
+$color-grey-dark-3: #333;
+
+$color-white: #fff;
+$color-black: #000;
+
+$cubic: cubic-bezier(0.4, 0, 0.2, 1);
+$transition-speed: 125ms;
+
+// FONT
+$default-font-size: 1.6rem;
+$font-primary: 'Nunito', sans-serif;
+
+// TOGGLE CONTROL VARIABLES
+// $toggle-background-color-on: $color-primary;
+// $toggle-background-color-off: $color-tertiary-dark;
+// $toggle-width: 9rem;
+// $toggle-height: 4.5rem;
+// $toggle-gutter: 5rem;
+// $toggle-radius: 50%;
+// CALCULATION TOGGLE
+// $toggle-radius: calc($toggle-height / 2);
+// $toggle-control-size: $toggle-height - ($toggle-gutter * 2);
+// RESPONSIVE BREAKPOINTS
+$phone: 37.5em; //600px
+$tab-port: 56.25em; //900px
+$tab-land: 75em; //1200px
+$big-desktop: 112.5em; //1800px
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  display: inline-block;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+html {
+  // This defines what 1rem is
+  font-size: 62.5%; //1 rem = 10px; 10px/16px = 62.5%
+
+  @include respond(tab-land) {
+    // width < 1200?
+    font-size: 56.25%; //1 rem = 9px, 9/16 = 50%
+  }
+
+  @include respond(tab-port) {
+    // width < 900?
+    font-size: 50%; //1 rem = 8px, 8/16 = 50%
+  }
+
+  // @include respond(big-desktop) {
+  //   font-size: 75%; //1rem = 12, 12/16
+  // }
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: $font-primary;
+  font-weight: 400;
+  line-height: 1.6;
+  background-color: $color-primary;
+
+  min-height: 100vh;
+}
+.visually-hidden {
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  margin: -1px;
+}

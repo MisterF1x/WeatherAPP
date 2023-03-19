@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./sass/main.scss" />
+    <title>Weather APP</title>
+  </head>
+  <body>
+    <main class="container">
+      <section class="sidebar">
+        <div class="search-block">
+          <label for="city" class="search-block__label">
+            <input
+              class="search-block__input"
+              type="text"
+              name="city"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Select city"
+              placeholder="Search for places..."
+            />
+            <svg class="search-block__icon icon">
+              <use href="./img/sprite.svg#icon-search"></use>
+            </svg>
+          </label>
+          <ul class="search-block__list" aria-labelledby="select_city"></ul>
+        </div>
+        <div class="current-condition"></div>
+      </section>
+      <section class="weather">
+        <header class="navigation">
+          <ul class="nav-list">
+            <li class="nav-list__item">
+              <a
+                href="#"
+                class="nav-list__link current"
+                data-state="open"
+                data-weather="hourly"
+                >Today</a
+              >
+            </li>
+            <li class="nav-list__item">
+              <a
+                href="#"
+                class="nav-list__link"
+                data-state="close"
+                data-weather="daily"
+                >Week</a
+              >
+            </li>
+          </ul>
+          <ul class="temp-changer">
+            <li class="temp-changer__item">
+              <button class="celsius-btn btn current__btn" type="button">
+                <svg class="btn-icon">
+                  <use href="./img/sprite.svg#celsius"></use>
+                </svg>
+              </button>
+            </li>
+            <li class="temp-changer__item">
+              <button class="fahrenheit-btn btn" type="button">
+                <svg class="btn-icon">
+                  <use href="./img/sprite.svg#fahrenheit"></use>
+                </svg>
+              </button>
+            </li>
+            <!-- <li class="temp-changer__item" style="display: none">
+              <label class="toggle-control">
+                <input type="checkbox" checked="checked" />
+                <span class="control"></span>
+              </label>
+            </li> -->
+          </ul>
+        </header>
+        <div class="swiper weather-lights">
+          <div class="swiper-wrapper"></div>
+          <span class="loader hide"></span>
+          <div class="swiper-button-prev">
+            <svg class="swiper-button-icon">
+              <use href="./img/sprite.svg#icon-circle-left"></use>
+            </svg>
+          </div>
+          <div class="swiper-button-next">
+            <svg class="swiper-button-icon">
+              <use href="./img/sprite.svg#icon-circle-right"></use>
+            </svg>
+          </div>
+        </div>
+      </section>
+      <section class="highlights">
+        <h2 class="highlights__title">Today Highlights</h2>
+        <ul class="detail-list"></ul>
+        <a
+          class="copyright"
+          href="https://open-meteo.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Weather data by Open-Meteo.com</a
+        >
+      </section>
+    </main>
+    <script src="./index.js" type="module"></script>
+  </body>
+</html>
