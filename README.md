@@ -1,3 +1,4 @@
+![Weather APP](https://github.com/MisterF1x/WeatherAPP/edit/main/src/img/weather.jpg)
 ![Weather APP](https://github.com/MisterF1x/WeatherAPP/edit/main/src/img/fill/svg-static/day/overcast-day.svg)
 
 # WeatherAPP

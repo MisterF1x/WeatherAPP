@@ -82,6 +82,8 @@
   }
   .swiper-slide.weather-lights__items {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   .highlights {
     grid-column: 2 / 3;

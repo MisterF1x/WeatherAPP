@@ -155,10 +155,15 @@ export const onClickTodayWeek = async evt => {
   clearHtml(refs.weatherLights);
   showLoader();
   try {
-    await getDataInUnit(weatherApi.weatherUnit);
-    console.log(hourly);
-    console.log(daily);
-    renderHourlyDailyWeather(weatherApi.dailyWeather);
+    const { hourly, daily, current_weather } = await getDataInUnit(
+      weatherApi.weatherUnit
+    );
+    renderHourlyDailyWeather(
+      weatherApi.dailyWeather,
+      hourly,
+      daily,
+      current_weather
+    );
     weatherApi.dailyWeather = weatherApi.dailyWeather ? false : true;
   } catch (error) {
     console.log(error.message);
@@ -186,7 +191,8 @@ export const onClickChangerUnit = async evt => {
   try {
     weatherApi.weatherUnit = evt.target.dataset.value;
 
-    await getDataInUnit(weatherApi.weatherUnit);
+    const { hourly, daily, current_weather, hourly_units } =
+      await getDataInUnit(weatherApi.weatherUnit);
     const airQuality = await weatherApi.fetchAirQuality();
 
     renderMarkup(

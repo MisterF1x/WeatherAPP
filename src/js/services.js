@@ -557,15 +557,17 @@ export const hideLoader = () => {
 };
 export const getDataInUnit = async unit => {
   if (unit === 'fahrenheit') {
-    return ({ hourly, daily, current_weather, hourly_units } =
-      await weatherApi.fetchWeatherInFarenheit());
+    return await weatherApi.fetchWeatherInFarenheit();
   } else {
-    return ({ hourly, daily, current_weather, hourly_units } =
-      await weatherApi.fetchWeather());
+    return await weatherApi.fetchWeather();
   }
 };
-export const renderHourlyDailyWeather = dailyWeather => {
-  // console.log(weatherApi.dailyWeather);
+export const renderHourlyDailyWeather = (
+  dailyWeather,
+  hourly,
+  daily,
+  current_weather
+) => {
   if (!dailyWeather) {
     renderMarkup(
       refs.weatherLights,
