@@ -5,7 +5,7 @@
   "browserslist": "> 0.2% and not dead",
   "scripts": {
     "start": "parcel src/*.html",
-    "build": "parcel build src/*.html --public-url /parcel/"
+    "build": "parcel build src/*.html --public-url /WeatherAPP/"
   },
   "repository": {
     "type": "git",
@@ -15,7 +15,7 @@
   "author": "Oleksand",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MisterF1x/parcel/issues"
+    "url": "https://github.com/MisterF1x/WeatherAPP/issues"
   },
   "homepage": "https://github.com/MisterF1x/WeatherAPP#readme",
   "devDependencies": {
