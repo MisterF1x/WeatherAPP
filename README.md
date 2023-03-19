@@ -1,5 +1,5 @@
-<img src='https://github.com/MisterF1x/WeatherAPP/edit/main/src/img/weather.jpg' alt='weather app' width='600px' style='margin: 0 auto'/>
-![Weather APP](https://github.com/MisterF1x/WeatherAPP/edit/main/src/img/fill/svg-static/day/overcast-day.svg)
+<img src='./img/weather.jpg' alt='weather app' width='600px' style='margin: 0 auto'/>
+![Weather APP](./img/fill/svg-static/day/overcast-day.svg)
 
 # WeatherAPP
 
