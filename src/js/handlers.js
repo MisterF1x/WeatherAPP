@@ -231,8 +231,7 @@ export const onFocuseInput = () => {
   clearHtml(refs.searchedCities);
   renderMarkup(
     refs.searchedCities,
-    `<li class="search-block__btn" style=' padding: .7rem; border: 1px solid #c7c7c7;
-border-radius: .5rem;' >
+    `<li class="search-block__btn" style=' padding: .7rem;' >
               Start typing to search for locations
           </li> `
   );
