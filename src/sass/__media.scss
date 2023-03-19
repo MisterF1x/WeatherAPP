@@ -80,6 +80,9 @@
       }
     }
   }
+  .swiper-slide.weather-lights__items {
+    display: flex;
+  }
   .highlights {
     grid-column: 2 / 3;
     grid-row: 2 / 3;

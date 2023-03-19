@@ -1,5 +1,5 @@
 import WeatherApi from './api';
-import Notiflix, { Notify, Loading } from 'notiflix';
+import { Notify, Loading } from 'notiflix';
 import { refs } from './refs';
 import {
   markupCurrentCondition,
@@ -156,7 +156,8 @@ export const onClickTodayWeek = async evt => {
   showLoader();
   try {
     await getDataInUnit(weatherApi.weatherUnit);
-
+    console.log(hourly);
+    console.log(daily);
     renderHourlyDailyWeather(weatherApi.dailyWeather);
     weatherApi.dailyWeather = weatherApi.dailyWeather ? false : true;
   } catch (error) {
@@ -184,7 +185,7 @@ export const onClickChangerUnit = async evt => {
   clearHtml(refs.highlights);
   try {
     weatherApi.weatherUnit = evt.target.dataset.value;
-    console.log(weatherApi.dailyWeather);
+
     await getDataInUnit(weatherApi.weatherUnit);
     const airQuality = await weatherApi.fetchAirQuality();
 
