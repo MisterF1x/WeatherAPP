@@ -1,7 +1,5 @@
-<img src='./img/weather.jpg' alt='weather app' width='600px' style='margin: 0 auto'/>
-![Weather APP](./img/fill/svg-static/day/overcast-day.svg)
 
-# WeatherAPP
+# WeatherAPP<img src='./src/img/fill/svg-static/day/overcast-day.svg' alt='weather app' width='50px'/>
 
 Description Welcome to my project! This is a Weather APP made in Javascript and
 open-source weather API open-meteo.com. It allows users to quickly and easily
