@@ -1,7 +1,4 @@
 @media only screen and (min-width: 500px) {
-  .container {
-    width: 100%;
-  }
   .sidebar {
     min-height: 57.5rem;
     height: auto;
@@ -81,9 +78,6 @@
       & img {
         width: 100%;
       }
-      // &:not(:last-child) {
-      //   margin-right: 8px;
-      // }
     }
   }
   .highlights {

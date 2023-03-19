@@ -16,8 +16,7 @@
   display: flex;
   flex-direction: column;
   height: auto;
-  width: 100%;
-  // padding: 0 10px 20px;
+  width: 100vw;
   background-color: $color-secondary-light;
   overflow: hidden;
 }
@@ -34,8 +33,6 @@
 .search-block {
   position: relative;
   font-size: 2rem;
-  // margin-bottom: 3rem;
-
   &__label {
     width: 100%;
     display: flex;
@@ -69,7 +66,6 @@
   &__list {
     display: flex;
     flex-direction: column;
-    // padding-bottom: 1rem;
     position: absolute;
     width: 100%;
     left: 0;
@@ -120,8 +116,6 @@
   &__primary {
     display: flex;
     flex-direction: column;
-    // padding-bottom: 2rem;
-    // border-bottom: 1px solid $color-grey-light-2;
   }
   &__temp {
     display: flex;
@@ -170,10 +164,6 @@
   }
 
   // CURRENT CONDITION SECONDARY BLOCK
-  // &__secondary {
-  //   // padding-top: 2rem;
-  // }
-
   &__overcoast {
     color: $color-primary;
     padding-left: 2rem;
@@ -195,7 +185,6 @@
   flex-wrap: wrap;
   flex-direction: column;
   order: -1;
-  // margin-top: 3rem;
 
   &__item:first-child {
     display: flex;
@@ -226,7 +215,6 @@
 .navigation {
   display: flex;
   justify-content: space-between;
-  // width: 100%;
   margin-bottom: 2rem;
   padding: 0 1rem;
 }
@@ -263,15 +251,9 @@
   }
 }
 .weather-lights {
-  // min-height: 154px;
-  // display: flex;
-  // width: 100%;
-
   &__items {
     font-family: $font-primary;
-    // padding: 1rem;
     background-color: #fff;
-    // width: calc(100% / 6);
   }
   &__time {
     font-size: 1.4rem;

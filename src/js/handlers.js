@@ -161,7 +161,7 @@ export const onClickTodayWeek = async evt => {
     weatherApi.dailyWeather = weatherApi.dailyWeather ? false : true;
   } catch (error) {
     console.log(error.message);
-    Notiflix.failure('Something went wrong');
+    Notify.failure('Something went wrong');
   } finally {
     hideLoader();
   }
@@ -215,7 +215,7 @@ export const onClickChangerUnit = async evt => {
     );
   } catch (error) {
     console.log(error.message);
-    Notiflix.failure('Something went wrong');
+    Notify.failure('Something went wrong');
   } finally {
     Loading.remove(300);
   }
