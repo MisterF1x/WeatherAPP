@@ -19,7 +19,7 @@ import {
   windyDay,
   addColorStatusTextVisibility,
   getIconDailyWeather,
-} from './functions';
+} from './services';
 
 export const markupCurrentCondition = (
   hourly,
@@ -400,7 +400,7 @@ export const markupSearchedCities = results => {
       return `
           <li class="search-block__btn" >
               <a data-id="${result.id}" class="search-block__link" href="#">
-              ${result.name}, ${result.country}, ${result.admin1}</a>
+              ${result.name}, ${result.country} ${result.admin1 ?? ''}</a>
           </li>
   `;
     })

@@ -11,6 +11,8 @@ export default class WeatherApi {
     this.timezone = 'auto';
     this.city = '';
     this.copySearchedCity = [];
+    this.weatherUnit = '';
+    this.dailyWeather = false;
   }
   async setGeolocation() {
     const options = {
@@ -39,6 +41,24 @@ export default class WeatherApi {
         hourly:
           'temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,precipitation_probability,weathercode,surface_pressure,cloudcover,visibility,windspeed_10m,winddirection_10m',
         timezone: this.timezone,
+      },
+    };
+    const { data } = await axios(WEATHER_URL, options);
+    return data;
+  }
+  async fetchWeatherInFarenheit() {
+    const options = {
+      params: {
+        latitude: this.lat,
+        longitude: this.long,
+        current_weather: 'true',
+        daily:
+          'weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max',
+        hourly:
+          'temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,precipitation_probability,weathercode,surface_pressure,cloudcover,visibility,windspeed_10m,winddirection_10m',
+        timezone: this.timezone,
+        temperature_unit: 'fahrenheit',
+        windspeed_unit: 'mph',
       },
     };
     const { data } = await axios(WEATHER_URL, options);
@@ -97,5 +117,8 @@ export default class WeatherApi {
   }
   set longitude(newLongitude) {
     this.long = newLongitude;
+  }
+  resetdailyWeather() {
+    this.dailyWeather = false;
   }
 }

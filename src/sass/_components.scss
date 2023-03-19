@@ -78,6 +78,9 @@
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
   }
+  &__btn {
+    font-size: 1.6rem;
+  }
 
   &__link {
     display: block;
@@ -86,7 +89,7 @@
     padding: 1rem;
     border-color: transparent;
     background-color: transparent;
-    transition: background-color 250ms $cubic;
+    transition: background-color $transition-speed $cubic;
 
     &:not(:last-child) {
       border-bottom: 1px solid $color-grey-dark-2;
@@ -239,13 +242,15 @@
   }
   &__link {
     border-bottom: 2px solid $color-black;
-    transition: opacity 250ms $cubic;
+    transition: color $transition-speed $cubic,
+      border-color $transition-speed $cubic;
     &.current {
       color: #c8c8c8;
       border-bottom: 2px solid #c8c8c8;
     }
     &:hover {
-      opacity: 0.55;
+      color: #c8c8c8;
+      border-color: #c8c8c8;
     }
   }
 }
@@ -253,7 +258,7 @@
   display: flex;
   &__item {
     &:not(:last-child) {
-      margin-right: 2rem;
+      margin-right: 1rem;
     }
   }
 }
@@ -471,6 +476,9 @@
 
 // BUTTON STYLE
 .btn {
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1.6rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -488,8 +496,8 @@
     fill: currentColor;
   }
   &:hover {
-    background-color: #7c96db;
-    color: $color-tertiary-light;
+    background-color: #fff;
+    color: $color-black;
   }
 }
 // icons style
@@ -518,7 +526,7 @@
     fill: #535353;
     opacity: 0.3;
     cursor: pointer;
-    transition: opacity 250ms $cubic;
+    transition: opacity $transition-speed $cubic;
 
     &:hover {
       opacity: 1;
@@ -556,7 +564,7 @@
   left: calc(50% - 100px);
   transform: translate(-50%, -50%);
   opacity: 1;
-  transition: all 250ms ease;
+  transition: all $transition-speed ease;
   animation: shadowRolling 2s linear infinite;
 }
 
@@ -602,7 +610,7 @@
 .hide {
   display: none;
   opacity: 0;
-  transition: opacity 250ms $cubic;
+  transition: opacity $transition-speed $cubic;
 }
 .current {
   &__btn {

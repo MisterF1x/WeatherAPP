@@ -1,5 +1,5 @@
 import WeatherApi from './api';
-import { Notify, Loading } from 'notiflix';
+import Notiflix, { Notify, Loading } from 'notiflix';
 import { refs } from './refs';
 import {
   markupCurrentCondition,
@@ -9,7 +9,14 @@ import {
   markupTodayHighligts,
   renderMarkup,
 } from './render';
-import { clearHtml, clearInput, hideLoader, showLoader } from './functions';
+import {
+  clearHtml,
+  clearInput,
+  hideLoader,
+  showLoader,
+  getDataInUnit,
+  renderHourlyDailyWeather,
+} from './services';
 
 export const weatherApi = new WeatherApi();
 export const onLoadWindow = async () => {
@@ -39,7 +46,6 @@ export const onLoadWindow = async () => {
         airQuality
       )
     );
-    console.log(current_weather);
   } catch (error) {
     Notify.failure('Something went wrong');
     console.log(error.message);
@@ -56,6 +62,7 @@ export const onInputSearchCities = async evt => {
     }
 
     const { results } = await weatherApi.fetchCities(name);
+
     weatherApi.copySearchedCity = [...results];
 
     clearHtml(refs.searchedCities);
@@ -63,19 +70,31 @@ export const onInputSearchCities = async evt => {
     renderMarkup(refs.searchedCities, markupSearchedCities(results));
   } catch (error) {
     clearHtml(refs.searchedCities);
+    if (error.code === 'ERR_NETWORK') {
+      Notify.failure(error.message);
+    }
+    if (!error.code)
+      renderMarkup(
+        refs.searchedCities,
+        `<li class="search-block__btn" >
+              No locations found
+          </li> `
+      );
     console.log(error.message);
   }
 };
 export const onClickCityName = async evt => {
+  if (evt.target.nodeName !== 'A') {
+    clearHtml(refs.searchedCities);
+    clearInput();
+    return;
+  }
   Loading.pulse();
   clearHtml(refs.searchedCities);
   clearHtml(refs.currentCondition);
   clearHtml(refs.weatherLights);
   clearHtml(refs.highlights);
 
-  if (evt.target.nodeName !== 'A') {
-    return;
-  }
   weatherApi.resetTimezone();
 
   const searchedCity = weatherApi.copySearchedCity.find(
@@ -136,21 +155,78 @@ export const onClickTodayWeek = async evt => {
   clearHtml(refs.weatherLights);
   showLoader();
   try {
-    const { hourly, daily, current_weather } = await weatherApi.fetchWeather();
-    if (evt.target.dataset.weather === 'hourly') {
+    await getDataInUnit(weatherApi.weatherUnit);
+
+    renderHourlyDailyWeather(weatherApi.dailyWeather);
+    weatherApi.dailyWeather = weatherApi.dailyWeather ? false : true;
+  } catch (error) {
+    console.log(error.message);
+    Notiflix.failure('Something went wrong');
+  } finally {
+    hideLoader();
+  }
+};
+export const onClickChangerUnit = async evt => {
+  const currentActiveBtn = document.querySelector('.current__btn');
+  if (weatherApi.latitude === 0 && weatherApi.longitude === 0) return;
+  if (evt.target.nodeName !== 'BUTTON') return;
+  if (evt.target.dataset.state === 'open') return;
+
+  currentActiveBtn.classList.remove('current__btn');
+  currentActiveBtn.dataset.state = 'close';
+
+  evt.target.classList.add('current__btn');
+  evt.target.dataset.state = 'open';
+  Loading.pulse();
+  clearHtml(refs.searchedCities);
+  clearHtml(refs.currentCondition);
+  clearHtml(refs.weatherLights);
+  clearHtml(refs.highlights);
+  try {
+    weatherApi.weatherUnit = evt.target.dataset.value;
+    console.log(weatherApi.dailyWeather);
+    await getDataInUnit(weatherApi.weatherUnit);
+    const airQuality = await weatherApi.fetchAirQuality();
+
+    renderMarkup(
+      refs.currentCondition,
+      markupCurrentCondition(hourly, daily, current_weather, hourly_units)
+    );
+    if (weatherApi.dailyWeather) {
+      renderMarkup(
+        refs.weatherLights,
+        markupDailyWeather(daily, current_weather)
+      );
+    } else {
       renderMarkup(
         refs.weatherLights,
         markupHourlyWeather(hourly, daily, current_weather)
       );
-      return;
     }
     renderMarkup(
-      refs.weatherLights,
-      markupDailyWeather(daily, current_weather)
+      refs.highlights,
+      markupTodayHighligts(
+        hourly,
+        daily,
+        current_weather,
+        hourly_units,
+        airQuality
+      )
     );
   } catch (error) {
     console.log(error.message);
+    Notiflix.failure('Something went wrong');
   } finally {
-    hideLoader();
+    Loading.remove(300);
   }
+};
+export const onFocuseInput = () => {
+  clearHtml(refs.searchedCities);
+  renderMarkup(
+    refs.searchedCities,
+    `<li class="search-block__btn" style=' padding: .7rem; border: 1px solid #c7c7c7;
+border-radius: .5rem;' >
+              Start typing to search for locations
+          </li> `
+  );
 };

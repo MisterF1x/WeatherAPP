@@ -33,37 +33,33 @@
         <header class="navigation">
           <ul class="nav-list">
             <li class="nav-list__item">
-              <a
-                href="#"
-                class="nav-list__link current"
-                data-state="open"
-                data-weather="hourly"
+              <a href="#" class="nav-list__link current" data-state="open"
                 >Today</a
               >
             </li>
             <li class="nav-list__item">
-              <a
-                href="#"
-                class="nav-list__link"
-                data-state="close"
-                data-weather="daily"
-                >Week</a
-              >
+              <a href="#" class="nav-list__link" data-state="close">Week</a>
             </li>
           </ul>
           <ul class="temp-changer">
             <li class="temp-changer__item">
-              <button class="celsius-btn btn current__btn" type="button">
-                <svg class="btn-icon">
-                  <use href="./img/sprite.svg#celsius"></use>
-                </svg>
+              <button
+                class="celsius-btn btn current__btn"
+                type="button"
+                data-state="open"
+                data-value="celsius"
+              >
+                &degC
               </button>
             </li>
             <li class="temp-changer__item">
-              <button class="fahrenheit-btn btn" type="button">
-                <svg class="btn-icon">
-                  <use href="./img/sprite.svg#fahrenheit"></use>
-                </svg>
+              <button
+                class="fahrenheit-btn btn"
+                type="button"
+                data-state="close"
+                data-value="fahrenheit"
+              >
+                &degF
               </button>
             </li>
             <!-- <li class="temp-changer__item" style="display: none">
