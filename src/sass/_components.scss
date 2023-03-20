@@ -40,13 +40,16 @@
   }
 
   &__input {
+    font-size: 1.6rem;
     height: 2rem;
     font-family: $font-primary;
     color: #212121;
     width: 100%;
     padding: 0.9rem 2rem 0.9rem 4.5rem;
     border-color: transparent;
+    border-radius: 0;
     outline: none;
+    appearance: none;
     &:focus {
       outline: none;
     }
@@ -229,16 +232,17 @@
     }
   }
   &__link {
-    border-bottom: 2px solid $color-black;
+    color: #c8c8c8;
+    border-bottom: 2px solid #c8c8c8;
     transition: color $transition-speed $cubic,
       border-color $transition-speed $cubic;
     &.current {
-      color: #c8c8c8;
-      border-bottom: 2px solid #c8c8c8;
+      color: $color-black;
+      border-bottom: 2px solid $color-black;
     }
     &:hover {
-      color: #c8c8c8;
-      border-color: #c8c8c8;
+      color: $color-black;
+      border-color: $color-black;
     }
   }
 }
@@ -467,9 +471,9 @@
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
-  background-color: $color-black;
+  background-color: $color-white;
   border: none;
-  color: $color-white;
+  color: $color-black;
   transition: color $transition-speed $cubic,
     background-color $transition-speed $cubic;
   &-icon {
@@ -478,8 +482,8 @@
     fill: currentColor;
   }
   &:hover {
-    background-color: #fff;
-    color: $color-black;
+    background-color: $color-black;
+    color: #fff;
   }
 }
 // icons style
@@ -596,7 +600,7 @@
 }
 .current {
   &__btn {
-    background-color: $color-white;
-    color: $color-black;
+    background-color: $color-black;
+    color: $color-white;
   }
 }
