@@ -110,7 +110,7 @@ export const onClickCityName = async evt => {
 
   try {
     const { hourly, daily, current_weather, hourly_units } =
-      await weatherApi.fetchWeather();
+      await getDataInUnit(weatherApi.weatherUnit);
 
     const airQuality = await weatherApi.fetchAirQuality();
 
