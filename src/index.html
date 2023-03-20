@@ -25,12 +25,14 @@
     <title>Weather APP</title>
   </head>
   <body>
-    <h1 class="visually-hidden">Weathe in your cities</h1>
+    <h1 class="visually-hidden">Weathe in your city</h1>
     <main class="container">
       <section class="sidebar">
+        <h2 class="visually-hidden">Current condition forecast</h2>
         <div class="search-block">
           <label for="city" class="search-block__label">
             <input
+              id="city"
               class="search-block__input"
               type="text"
               name="city"
@@ -43,11 +45,12 @@
               <use href="./img/sprite.svg#icon-search"></use>
             </svg>
           </label>
-          <ul class="search-block__list" aria-labelledby="select_city"></ul>
+          <ul class="search-block__list" aria-label="select_city"></ul>
         </div>
         <div class="current-condition"></div>
       </section>
       <section class="weather">
+        <h2 class="visually-hidden">Hourly and daily weather</h2>
         <header class="navigation">
           <ul class="nav-list">
             <li class="nav-list__item">
@@ -67,7 +70,7 @@
                 data-state="open"
                 data-value="celsius"
               >
-                &degC
+                &deg;C
               </button>
             </li>
             <li class="temp-changer__item">
@@ -77,7 +80,7 @@
                 data-state="close"
                 data-value="fahrenheit"
               >
-                &degF
+                &deg;F
               </button>
             </li>
             <!-- <li class="temp-changer__item" style="display: none">
