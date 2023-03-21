@@ -10,16 +10,16 @@ format on the user's device.
 
 The app likely has several key features, including:
 
--Current weather information: This includes the current temperature, humidity,
+- Current weather information: This includes the current temperature, humidity,
 wind speed, and other relevant details.
 
--Forecast information: The app likely provides a forecast for the coming days,
+- Forecast information: The app likely provides a forecast for the coming days,
 including high and low temperatures, precipitation chances, and other details.
 
--Location selection: Users can select their current location or input a
+- Location selection: Users can select their current location or input a
 different location to view weather information for that area.
 
--Customization options: Users may be able to customize the app to suit their
+- Customization options: Users may be able to customize the app to suit their
 preferences, such as choosing units of measurement.
 
 Overall, web weather app provides users with a convenient and reliable way to
