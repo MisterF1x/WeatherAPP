@@ -40,7 +40,7 @@
   }
 
   &__input {
-    font-size: 1.8rem;
+    // font-size: 1.8rem;
     height: 2rem;
     font-family: $font-primary;
     color: #212121;
@@ -51,7 +51,6 @@
     outline: none;
     appearance: none;
     &:focus {
-      font-size: 16px;
       outline: none;
     }
     &::placeholder {
