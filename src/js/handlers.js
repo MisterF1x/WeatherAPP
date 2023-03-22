@@ -47,8 +47,8 @@ export const onLoadWindow = async () => {
       )
     );
   } catch (error) {
-    Notify.failure('Something went wrong');
-    console.log(error.message);
+    // Notify.failure('Something went wrong');
+    console.error(error.message);
   } finally {
     Loading.remove(300);
   }
@@ -84,17 +84,20 @@ export const onInputSearchCities = async evt => {
   }
 };
 export const onClickCityName = async evt => {
+  const clearedRefs = [
+    refs.searchedCities,
+    refs.currentCondition,
+    refs.weatherLights,
+    refs.highlights,
+  ];
+
   if (evt.target.nodeName !== 'A') {
     clearHtml(refs.searchedCities);
     clearInput();
     return;
   }
   Loading.pulse();
-  clearHtml(refs.searchedCities);
-  clearHtml(refs.currentCondition);
-  clearHtml(refs.weatherLights);
-  clearHtml(refs.highlights);
-
+  clearedRefs.forEach(ref => clearHtml(ref));
   weatherApi.resetTimezone();
 
   const searchedCity = weatherApi.copySearchedCity.find(
@@ -231,11 +234,9 @@ export const onClickChangerUnit = async evt => {
   }
 };
 export const onFocuseInput = () => {
-  clearHtml(refs.searchedCities);
-  renderMarkup(
-    refs.searchedCities,
-    `<li class="search-block__btn" style=' padding: .7rem;' >
+  const tpl = `<li class="search-block__btn" style=' padding: .7rem;' >
               Start typing to search for locations
-          </li> `
-  );
+          </li> `;
+  clearHtml(refs.searchedCities);
+  renderMarkup(refs.searchedCities, tpl);
 };
