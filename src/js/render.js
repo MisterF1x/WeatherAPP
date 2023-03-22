@@ -4,9 +4,6 @@ import * as weatherSprite from '../img/*.svg';
 import * as icons from '../img/fill/svg-static/icons/*.svg';
 import * as riseSet from '../img/fill/svg-static/rise-set/*.svg';
 import {
-  addColorStatusTextHumidity,
-  addColorStatusTextAqi,
-  airQualityRanges,
   getIconSecondaryCondition,
   getIconWeather,
   getUvindexIcon,
@@ -14,11 +11,11 @@ import {
   mphOrKmVisibility,
   relativeHumidity,
   unitChanger,
-  visibilityCondition,
   windDirection,
   windyDay,
-  addColorStatusTextVisibility,
   getIconDailyWeather,
+  getAirQualityStatus,
+  getVisibilityCondition,
 } from './services';
 
 export const markupCurrentCondition = (
@@ -54,10 +51,10 @@ export const markupCurrentCondition = (
   const apparentTemp = Math.round(apparent_temperature[index]);
   const iconSecondary = getIconSecondaryCondition(
     weathercode[index],
-    sunrise[0],
-    sunset[0],
     windspeed_10m[index],
     hourly_units['windspeed_10m'],
+    sunrise[0],
+    sunset[0],
     time
   );
 
@@ -68,6 +65,7 @@ export const markupCurrentCondition = (
   const windy = windyDay(windspeed_10m[index], hourly_units['windspeed_10m'])
     ? `/${windyDay(windspeed_10m[index], hourly_units['windspeed_10m'])}`
     : '';
+
   // let svgUrl = new URL('../img/sprite.svg', import.meta.url);
   return `
               <div class="current-condition__primary">
@@ -253,6 +251,16 @@ export const markupTodayHighligts = (
     winddirection_10m,
   } = hourly;
   let index = time.indexOf(current_weather.time);
+  const { airQualityStatus, airQualityColor } = getAirQualityStatus(
+    airQuality.hourly.us_aqi[index]
+  );
+  const { visibilityStatus, visibilityColor } = getVisibilityCondition(
+    hourly_units['temperature_2m'],
+    visibility[index]
+  );
+  const { humidityStatus, humidityColor } = relativeHumidity(
+    relativehumidity_2m[index]
+  );
   const uvi = Math.round(uv_index_max[0]);
 
   return `
@@ -313,10 +321,8 @@ export const markupTodayHighligts = (
               />
             </div>
 
-            <p class="detail-list__status" style="color:${addColorStatusTextHumidity(
-              relativeHumidity(relativehumidity_2m[index])
-            )}">
-              ${relativeHumidity(relativehumidity_2m[index])}
+            <p class="detail-list__status" style="color:${humidityColor}">
+              ${humidityStatus}
             </p>
           </li>
           <li class="detail-list__item">
@@ -328,16 +334,8 @@ export const markupTodayHighligts = (
               )}
             </p>
             <p class="detail-list__status" style="color:
-            ${addColorStatusTextVisibility(
-              visibilityCondition(
-                hourly_units['temperature_2m'],
-                visibility[index]
-              )
-            )}">
-              ${visibilityCondition(
-                hourly_units['temperature_2m'],
-                visibility[index]
-              )}
+            ${visibilityColor}">
+              ${visibilityStatus}
             </p>
           </li>
           <li class="detail-list__item">
@@ -363,13 +361,9 @@ export const markupTodayHighligts = (
                 style="
                   stroke-width: 15;
                   stroke-dasharray: ${
-                    (airQuality.hourly.european_aqi[index] *
-                      (2 * Math.PI * 30)) /
-                    100
+                    (airQuality.hourly.us_aqi[index] * (2 * Math.PI * 30)) / 200
                   } ${2 * Math.PI * 30};
-                  stroke: ${addColorStatusTextAqi(
-                    airQualityRanges(airQuality.hourly.us_aqi[index])
-                  )};
+                  stroke: ${airQualityColor};
                   fill: #0000;
                   transition: stroke-dasharray 0.3s ease;
                 "
@@ -386,17 +380,15 @@ export const markupTodayHighligts = (
               </text>
             </svg>
 
-            <p class="detail-list__status" style="color: ${addColorStatusTextAqi(
-              airQualityRanges(airQuality.hourly.us_aqi[index])
-            )}">
-            ${airQualityRanges(airQuality.hourly.us_aqi[index])}
+            <p class="detail-list__status" style="color: ${airQualityColor}">
+            ${airQualityStatus}
             </p>
           </li>
   `;
 };
 export const markupSearchedCities = results => {
   return results
-    .map(result => {
+    ?.map(result => {
       return `
           <li class="search-block__btn" >
               <a data-id="${result.id}" class="search-block__link" href="#">

@@ -62,25 +62,25 @@ export const onInputSearchCities = async evt => {
     }
 
     const { results } = await weatherApi.fetchCities(name);
-
-    weatherApi.copySearchedCity = [...results];
+    weatherApi.copySearchedCity = !results ? [] : [...results];
 
     clearHtml(refs.searchedCities);
-
-    renderMarkup(refs.searchedCities, markupSearchedCities(results));
-  } catch (error) {
-    clearHtml(refs.searchedCities);
-    if (error.code === 'ERR_NETWORK') {
-      Notify.failure(error.message);
-    }
-    if (!error.code)
+    if (!results) {
       renderMarkup(
         refs.searchedCities,
         `<li class="search-block__btn" >
               No locations found
           </li> `
       );
-    console.log(error.message);
+      return;
+    }
+    renderMarkup(refs.searchedCities, markupSearchedCities(results));
+  } catch (error) {
+    console.error(error.message);
+    clearHtml(refs.searchedCities);
+    if (error.code === 'ERR_NETWORK') {
+      Notify.failure(error.message);
+    }
   }
 };
 export const onClickCityName = async evt => {
@@ -100,9 +100,8 @@ export const onClickCityName = async evt => {
   const searchedCity = weatherApi.copySearchedCity.find(
     city => city.id === Number(evt.target.dataset.id)
   );
-  if (searchedCity.country_code === 'UA') {
-    weatherApi.timezone = 'Europe/Kiev';
-  }
+  weatherApi.timezone =
+    searchedCity.country_code === 'UA' ? 'Europe/Kiev' : 'auto';
 
   weatherApi.city = searchedCity.name;
   weatherApi.latitude = searchedCity.latitude;
@@ -114,14 +113,16 @@ export const onClickCityName = async evt => {
 
     const airQuality = await weatherApi.fetchAirQuality();
 
+    const weatherLightsMarkup = weatherApi.dailyWeather
+      ? markupDailyWeather(daily, current_weather)
+      : markupHourlyWeather(hourly, daily, current_weather);
+
     renderMarkup(
       refs.currentCondition,
       markupCurrentCondition(hourly, daily, current_weather, hourly_units)
     );
-    renderMarkup(
-      refs.weatherLights,
-      markupHourlyWeather(hourly, daily, current_weather)
-    );
+    renderMarkup(refs.weatherLights, weatherLightsMarkup);
+
     renderMarkup(
       refs.highlights,
       markupTodayHighligts(
@@ -134,7 +135,7 @@ export const onClickCityName = async evt => {
     );
   } catch (error) {
     Notify.failure('Something went wrong');
-    console.log(error.message);
+    console.error(error.message);
   } finally {
     clearInput();
     Loading.remove(300);
@@ -166,17 +167,26 @@ export const onClickTodayWeek = async evt => {
     );
     weatherApi.dailyWeather = weatherApi.dailyWeather ? false : true;
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     Notify.failure('Something went wrong');
   } finally {
     hideLoader();
   }
 };
 export const onClickChangerUnit = async evt => {
+  const clearedRefs = [
+    refs.searchedCities,
+    refs.currentCondition,
+    refs.weatherLights,
+    refs.highlights,
+  ];
   const currentActiveBtn = document.querySelector('.current__btn');
-  if (weatherApi.latitude === 0 && weatherApi.longitude === 0) return;
-  if (evt.target.nodeName !== 'BUTTON') return;
-  if (evt.target.dataset.state === 'open') return;
+  if (
+    (weatherApi.latitude === 0 && weatherApi.longitude === 0) ||
+    evt.target.nodeName !== 'BUTTON' ||
+    evt.target.dataset.state === 'open'
+  )
+    return;
 
   currentActiveBtn.classList.remove('current__btn');
   currentActiveBtn.dataset.state = 'close';
@@ -184,10 +194,8 @@ export const onClickChangerUnit = async evt => {
   evt.target.classList.add('current__btn');
   evt.target.dataset.state = 'open';
   Loading.pulse();
-  clearHtml(refs.searchedCities);
-  clearHtml(refs.currentCondition);
-  clearHtml(refs.weatherLights);
-  clearHtml(refs.highlights);
+  clearedRefs.forEach(ref => clearHtml(ref));
+
   try {
     weatherApi.weatherUnit = evt.target.dataset.value;
 
@@ -195,21 +203,16 @@ export const onClickChangerUnit = async evt => {
       await getDataInUnit(weatherApi.weatherUnit);
     const airQuality = await weatherApi.fetchAirQuality();
 
+    const weatherLightsMarkup = weatherApi.dailyWeather
+      ? markupDailyWeather(daily, current_weather)
+      : markupHourlyWeather(hourly, daily, current_weather);
+
     renderMarkup(
       refs.currentCondition,
       markupCurrentCondition(hourly, daily, current_weather, hourly_units)
     );
-    if (weatherApi.dailyWeather) {
-      renderMarkup(
-        refs.weatherLights,
-        markupDailyWeather(daily, current_weather)
-      );
-    } else {
-      renderMarkup(
-        refs.weatherLights,
-        markupHourlyWeather(hourly, daily, current_weather)
-      );
-    }
+    renderMarkup(refs.weatherLights, weatherLightsMarkup);
+
     renderMarkup(
       refs.highlights,
       markupTodayHighligts(
@@ -221,7 +224,7 @@ export const onClickChangerUnit = async evt => {
       )
     );
   } catch (error) {
-    console.log(error.message);
+    console.error(error.message);
     Notify.failure('Something went wrong');
   } finally {
     Loading.remove(300);

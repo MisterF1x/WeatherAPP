@@ -180,145 +180,119 @@ export const getIconWeather = (
   }
 };
 export const getIconDailyWeather = (weathercode, sunrise, sunset, time) => {
-  if (weathercode === 0) {
-    return isDay(sunrise, sunset, time)
-      ? iconsDay['clear-day']
-      : iconsNight['clear-night'];
-  }
-  if (weathercode === 1) {
-    return isDay(sunrise, sunset, time)
-      ? iconsDay['partly-cloudy-day']
-      : iconsNight['partly-cloudy-night'];
-  }
-  if (weathercode === 2) return iconsDaily['overcast'];
-  if (weathercode === 3) return iconsDaily['extreme'];
-  if (weathercode === 45) return iconsDaily['fog'];
-  if (weathercode === 48) return iconsDaily['haze'];
-  if (weathercode === 51) return iconsDaily['drizzle'];
-  if (weathercode === 53) return iconsDaily['overcast-drizzle'];
-  if (weathercode === 55) return iconsDaily['extreme-drizzle'];
-  if (weathercode === 56 || weathercode === 66) return iconsDaily['sleet'];
-  if (weathercode === 67 || weathercode === 57)
-    return iconsDaily['overcast-sleet'];
-  if (weathercode === 61 || weathercode === 63) return iconsDaily['rain'];
-  if (weathercode === 65 || weathercode === 80)
-    return iconsDaily['overcast-rain'];
-  if (weathercode === 81 || weathercode === 82)
-    return iconsDaily['extreme-rain'];
-  if (weathercode === 71 || weathercode === 73) return iconsDaily['snow'];
-  if (weathercode === 75) return iconsDaily['overcast-snow'];
-  if (weathercode === 77) return iconsDaily['overcast-hail'];
-  if (weathercode === 85 || weathercode === 86)
-    return iconsDaily['extreme-snow'];
+  const isDayTime = isDay(sunrise, sunset, time);
 
-  if (weathercode === 95 || weathercode === 96)
-    return iconsDaily['thunderstorms-overcast-rain'];
-  if (weathercode === 99) return iconsDaily['thunderstorms-extreme-rain'];
+  const iconMap = {
+    0: isDayTime ? iconsDay['clear-day'] : iconsNight['clear-night'],
+    1: isDayTime
+      ? iconsDay['partly-cloudy-day']
+      : iconsNight['partly-cloudy-night'],
+    2: iconsDaily['overcast'],
+    3: iconsDaily['extreme'],
+    45: iconsDaily['fog'],
+    48: iconsDaily['haze'],
+    51: iconsDaily['drizzle'],
+    53: iconsDaily['overcast-drizzle'],
+    55: iconsDaily['extreme-drizzle'],
+    56: iconsDaily['sleet'],
+    57: iconsDaily['overcast-sleet'],
+    61: iconsDaily['rain'],
+    63: iconsDaily['rain'],
+    65: iconsDaily['overcast-rain'],
+    66: iconsDaily['sleet'],
+    67: iconsDaily['overcast-sleet'],
+    71: iconsDaily['snow'],
+    73: iconsDaily['snow'],
+    75: iconsDaily['overcast-snow'],
+    77: iconsDaily['overcast-hail'],
+    80: iconsDaily['overcast-rain'],
+    81: iconsDaily['extreme-rain'],
+    82: iconsDaily['extreme-rain'],
+    85: iconsDaily['extreme-snow'],
+    86: iconsDaily['extreme-snow'],
+    95: iconsDaily['thunderstorms-overcast-rain'],
+    96: iconsDaily['thunderstorms-overcast-rain'],
+    99: iconsDaily['thunderstorms-extreme-rain'],
+  };
+
+  const weatherIcon = iconMap[weathercode];
+  return weatherIcon;
 };
 export const getWeatherText = (weathercode, sunrise, sunset, time) => {
   switch (weathercode) {
     case 0:
       return isDay(sunrise, sunset, time) ? 'Sunny' : 'Clear sky';
-      break;
     case 1:
       return isDay(sunrise, sunset, time) ? 'Mostly Sunny' : 'Mostly Clear';
-      break;
     case 2:
       return isDay(sunrise, sunset, time) ? 'Partly Sunny' : 'Partly Cloudy';
-      break;
     case 3:
       return 'Cloudy';
-      break;
     case 45:
       return 'Fog';
-      break;
     case 48:
       return 'Rime Fog';
-      break;
     case 51:
       return 'Light Drizzle';
-      break;
     case 53:
       return 'Drizzle';
-      break;
     case 55:
       return 'Heavy Drizzle';
-      break;
     case 56:
       return 'Freezing drizzle';
-      break;
     case 57:
       return 'Heavy Freezing drizzle';
-      break;
     case 61:
       return 'Light Rain';
-      break;
     case 63:
       return 'Rain';
-      break;
     case 65:
       return 'Heavy Rain';
-      break;
     case 66:
       return 'Light Freezing Rain';
       break;
     case 67:
       return 'Heavy Freezing Rain';
-      break;
     case 71:
       return 'Light Snow';
     case 73:
       return 'Snow';
-      break;
     case 75:
       return 'Heavy Snow';
-      break;
     case 77:
       return 'Snow Grains';
-      break;
     case 80:
       return 'Few Showers';
-      break;
     case 81:
       return 'Showers';
-      break;
     case 82:
       return 'Heavy Showers';
-      break;
     case 85:
       return 'Few Snow Showers';
-      break;
     case 86:
       return 'Snow Showers';
-      break;
     case 95:
       return 'Thunderstorm';
-      break;
     case 96:
       return 'Thunderstorm and Hail';
-      break;
     case 99:
       return 'Thunderstorm and Heavy Hail';
-      break;
   }
 };
 export const windyDay = (windspeed, windspeedUnit) => {
+  const speedLimits = {
+    'km/h': { wind: 30, hurricane: 125 },
+    'mp/h': { wind: 24, hurricane: 75 },
+  };
+
   const unit = windspeedUnit.toLowerCase();
-  if (unit === 'km/h') {
-    if (windspeed > 30) {
-      return 'Wind';
-    }
-    if (windspeed > 125) {
-      return 'Hurricane';
-    }
+  const limits = speedLimits[unit];
+
+  if (windspeed > limits.wind) {
+    return 'Wind';
   }
-  if (unit === 'mp/h') {
-    if (windspeed > 24) {
-      return 'Wind';
-    }
-    if (windspeed > 75) {
-      return 'Hurricane';
-    }
+  if (windspeed > limits.hurricane) {
+    return 'Hurricane';
   }
 };
 export const windDirection = direction => {
@@ -394,154 +368,116 @@ export const getIconSecondaryCondition = (
   time
 ) => {
   if (windyDay(windspeed, windspeedUnit)) {
-    return windyDay(windspeed, windspeedUnit).toLowerCase();
+    return 'wind';
   }
-  if (weathercode === 0) {
-    return isDay(sunrise, sunset, time) ? 'clearday' : 'clearnight';
+  switch (weathercode) {
+    case 0:
+      return isDay(sunrise, sunset, time) ? 'clearday' : 'clearnight';
+    case 1:
+    case 2:
+    case 3:
+      return 'cloudy';
+    case 45:
+    case 48:
+      return 'mist';
+    case 51:
+    case 53:
+    case 55:
+    case 61:
+    case 63:
+    case 65:
+    case 80:
+    case 81:
+    case 82:
+      return 'raindrop';
+    case 56:
+    case 57:
+    case 71:
+    case 73:
+    case 75:
+    case 77:
+    case 85:
+    case 86:
+      return 'snowflake';
+    case 66:
+    case 67:
+      return 'hail';
+    case 95:
+    case 96:
+    case 99:
+      return 'thunderstorm';
+    default:
+      return 'cloudy';
   }
-  if (weathercode === 1 || weathercode === 2 || weathercode === 3)
-    return 'cloudy';
-  if (weathercode === 45 || weathercode === 48) return 'mist';
-  if (
-    weathercode === 51 ||
-    weathercode === 53 ||
-    weathercode === 55 ||
-    weathercode === 61 ||
-    weathercode === 63 ||
-    weathercode === 65 ||
-    weathercode === 80 ||
-    weathercode === 81 ||
-    weathercode === 82
-  )
-    return 'raindrop';
-  if (
-    weathercode === 56 ||
-    weathercode === 57 ||
-    weathercode === 71 ||
-    weathercode === 73 ||
-    weathercode === 75 ||
-    weathercode === 77 ||
-    weathercode === 85 ||
-    weathercode === 86
-  )
-    return 'snowflake';
-  if (weathercode === 66 || weathercode === 67) return 'hail';
-  if (weathercode === 95 || weathercode === 96 || weathercode === 99)
-    return 'thunderstorm';
 };
 export const unitChanger = tempUnit => {
   return tempUnit === '°F' ? 'fahrenheit' : 'celsius';
 };
 export const relativeHumidity = humidity => {
   if (humidity < 20) {
-    return 'Dry';
+    return { humidityStatus: 'Dry', humidityColor: '#FFD700' };
   }
   if (humidity > 60) {
-    return 'Wet';
+    return { humidityStatus: 'Wet', humidityColor: '#2F58CD' };
   }
-  return 'Normal';
-};
-export const addColorStatusTextHumidity = string => {
-  if (string.toLowerCase() === 'dry') {
-    return '#FFD700';
-  }
-  if (string.toLowerCase() === 'wet') {
-    return '#2F58CD';
-  }
-  if (string.toLowerCase() === 'normal') {
-    return '#539165';
-  }
+  return { humidityStatus: 'Normal', humidityColor: '#539165' };
 };
 export const mphOrKmVisibility = (unit, visibility) => {
   const mph = 0.621371192;
-  return unit === '°F'
-    ? `${((visibility / 1000) * mph).toFixed(1)} mi`
-    : `${(visibility / 1000).toFixed(1)} km`;
+  const distance =
+    unit === '°F' ? (visibility / 1000) * mph : visibility / 1000;
+  return `${distance.toFixed(1)} ${unit === '°F' ? 'mi' : 'km'}`;
 };
-export const visibilityCondition = (unit, visibility) => {
+export const getVisibilityCondition = (unit, visibility) => {
   if (unit === '°F') {
-    if (visibility > 3.1) {
-      return 'Clear';
+    if (visibility > 3) {
+      return { visibilityStatus: 'Clear', visibilityColor: '#539165' };
     }
-    if (visibility >= 3.1 && visibility <= 0.6) {
-      return 'Average';
+    if (visibility >= 3 && visibility <= 0.5) {
+      return { visibilityStatus: 'Average', visibilityColor: '#E7B10A' };
     }
-    if (visibility < 0.6) {
-      return 'Poor';
+    if (visibility < 0.5) {
+      return { visibilityStatus: 'Poor', visibilityColor: '#E21818' };
     }
   }
   if (visibility > 5) {
-    return 'Clear';
+    return { visibilityStatus: 'Clear', visibilityColor: '#539165' };
   }
   if (visibility >= 5 && visibility <= 1) {
-    return 'Average';
+    return { visibilityStatus: 'Average', visibilityColor: '#E7B10A' };
   }
   if (visibility < 1) {
-    return 'Poor';
+    return { visibilityStatus: 'Poor', visibilityColor: '#E21818' };
   }
 };
-export const addColorStatusTextVisibility = string => {
-  if (string.toLowerCase() === 'poor') {
-    return '#E21818';
+export const getAirQualityStatus = aqi => {
+  if (aqi > 150) {
+    return { airQualityStatus: 'Unhealthy', airQualityColor: '#E21818' };
   }
-  if (string.toLowerCase() === 'avarege') {
-    return '#E7B10A';
+  if (aqi >= 60 && aqi <= 150) {
+    return { airQualityStatus: 'Moderate', airQualityColor: '#E7B10A' };
   }
-  if (string.toLowerCase() === 'clear') {
-    return '#539165';
-  }
-};
-export const airQualityRanges = aqi => {
-  if (aqi > 85) {
-    return 'Unhealthy';
-  }
-  if (aqi >= 55 && aqi <= 85) {
-    return 'Moderate';
-  }
-  if (aqi <= 55) {
-    return 'Good';
+  if (aqi <= 60) {
+    return { airQualityStatus: 'Good', airQualityColor: '#539165' };
   }
 };
-export const addColorStatusTextAqi = string => {
-  if (string.toLowerCase() === 'unhealthy') {
-    return '#E21818';
-  }
-  if (string.toLowerCase() === 'moderate') {
-    return '#E7B10A';
-  }
-  if (string.toLowerCase() === 'good') {
-    return '#539165';
-  }
-};
-export const getUvindexIcon = uvi => {
-  switch (uvi) {
-    case 0:
-      return uvIndex['uv-index'];
-    case 1:
-      return uvIndex['uv-index-1'];
-    case 2:
-      return uvIndex['uv-index-2'];
-    case 3:
-      return uvIndex['uv-index-3'];
-    case 4:
-      return uvIndex['uv-index-4'];
-    case 5:
-      return uvIndex['uv-index-5'];
-    case 6:
-      return uvIndex['uv-index-6'];
-    case 7:
-      return uvIndex['uv-index-7'];
-    case 8:
-      return uvIndex['uv-index-8'];
-    case 9:
-      return uvIndex['uv-index-9'];
-    case 10:
-      return uvIndex['uv-index-10'];
-    case 11:
-      return uvIndex['uv-index-11'];
-    default:
-      return uvIndex['uv-index'];
-  }
+export const getUvindexIcon = (uvi = 0) => {
+  const uvIndexMap = {
+    0: uvIndex['uv-index'],
+    1: uvIndex['uv-index-1'],
+    2: uvIndex['uv-index-2'],
+    3: uvIndex['uv-index-3'],
+    4: uvIndex['uv-index-4'],
+    5: uvIndex['uv-index-5'],
+    6: uvIndex['uv-index-6'],
+    7: uvIndex['uv-index-7'],
+    8: uvIndex['uv-index-8'],
+    9: uvIndex['uv-index-9'],
+    10: uvIndex['uv-index-10'],
+    11: uvIndex['uv-index-11'],
+  };
+
+  return uvIndexMap[uvi] || uvIndex['uv-index'];
 };
 export const clearHtml = el => {
   el.innerHTML = '';
@@ -556,11 +492,9 @@ export const hideLoader = () => {
   refs.loader.classList.add('hide');
 };
 export const getDataInUnit = async unit => {
-  if (unit === 'fahrenheit') {
-    return await weatherApi.fetchWeatherInFarenheit();
-  } else {
-    return await weatherApi.fetchWeather();
-  }
+  return (await unit) === 'fahrenheit'
+    ? weatherApi.fetchWeatherInFarenheit()
+    : weatherApi.fetchWeather();
 };
 export const renderHourlyDailyWeather = (
   dailyWeather,
@@ -568,15 +502,8 @@ export const renderHourlyDailyWeather = (
   daily,
   current_weather
 ) => {
-  if (!dailyWeather) {
-    renderMarkup(
-      refs.weatherLights,
-      markupDailyWeather(daily, current_weather)
-    );
-    return;
-  }
-  renderMarkup(
-    refs.weatherLights,
-    markupHourlyWeather(hourly, daily, current_weather)
-  );
+  const markup = dailyWeather
+    ? markupHourlyWeather(hourly, daily, current_weather)
+    : markupDailyWeather(daily, current_weather);
+  renderMarkup(refs.weatherLights, markup);
 };
