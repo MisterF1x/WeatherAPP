@@ -16,6 +16,7 @@ import {
   getIconDailyWeather,
   getAirQualityStatus,
   getVisibilityCondition,
+  closestDate,
 } from './services';
 
 export const markupCurrentCondition = (
@@ -36,7 +37,7 @@ export const markupCurrentCondition = (
     temperature_2m,
     windspeed_10m,
   } = hourly;
-  let index = hourly.time.indexOf(time);
+  let index = hourly.time.indexOf(closestDate(hourly.time, time));
   const parsedTime = parseISO(time);
   let icon = getIconWeather(
     weathercode[index],
@@ -136,7 +137,7 @@ export const markupHourlyWeather = (hourly, daily, current_weather) => {
     cloudcover,
   } = hourly;
   const { sunrise, sunset } = daily;
-  let index = time.indexOf(current_weather.time);
+  let index = time.indexOf(closestDate(time, current_weather.time));
   let array = [];
   const lenghtArray = index + 25;
   for (index += 1; index < lenghtArray; index += 1) {
@@ -235,6 +236,7 @@ export const markupDailyWeather = (daily, current_weather) => {
   }
   return array.join('');
 };
+
 export const markupTodayHighligts = (
   hourly,
   daily,
@@ -250,7 +252,8 @@ export const markupTodayHighligts = (
     windspeed_10m,
     winddirection_10m,
   } = hourly;
-  let index = time.indexOf(current_weather.time);
+  const index = time.indexOf(closestDate(time, current_weather.time));
+
   const { airQualityStatus, airQualityColor } = getAirQualityStatus(
     airQuality.hourly.us_aqi[index]
   );

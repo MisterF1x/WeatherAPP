@@ -507,3 +507,9 @@ export const renderHourlyDailyWeather = (
     : markupDailyWeather(daily, current_weather);
   renderMarkup(refs.weatherLights, markup);
 };
+export const closestDate = (dates, targetDate) =>
+  dates.reduce((prev, curr) => {
+    const prevDiff = Math.abs(new Date(prev) - new Date(targetDate));
+    const currDiff = Math.abs(new Date(curr) - new Date(targetDate));
+    return currDiff < prevDiff ? curr : prev;
+  });
