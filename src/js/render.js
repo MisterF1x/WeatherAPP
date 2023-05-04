@@ -18,6 +18,7 @@ import {
   getVisibilityCondition,
   closestDate,
 } from './services';
+import { refs } from './refs';
 
 export const markupCurrentCondition = (
   hourly,
@@ -395,7 +396,9 @@ export const markupSearchedCities = results => {
       return `
           <li class="search-block__btn" >
               <a data-id="${result.id}" class="search-block__link" href="#">
-              ${result.name}, ${result.country} ${result.admin1 ?? ''}</a>
+              ${result.name}, <span>${result.country} ${
+        result.admin1 ?? ''
+      }</span></a>
           </li>
   `;
     })
@@ -403,4 +406,30 @@ export const markupSearchedCities = results => {
 };
 export const renderMarkup = (el, markup) => {
   el.insertAdjacentHTML('beforeend', markup);
+};
+export const renderWeatherMarkup = (
+  hourly,
+  daily,
+  current_weather,
+  hourly_units,
+  airQuality
+) => {
+  renderMarkup(
+    refs.currentCondition,
+    markupCurrentCondition(hourly, daily, current_weather, hourly_units)
+  );
+  renderMarkup(
+    refs.weatherLights,
+    markupHourlyWeather(hourly, daily, current_weather)
+  );
+  renderMarkup(
+    refs.highlights,
+    markupTodayHighligts(
+      hourly,
+      daily,
+      current_weather,
+      hourly_units,
+      airQuality
+    )
+  );
 };

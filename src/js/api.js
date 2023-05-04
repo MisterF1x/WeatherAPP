@@ -28,7 +28,6 @@ export default class WeatherApi {
     if (data.country_code === 'UA') {
       this.timezone = 'Europe/Kiev';
     }
-    // return data;
   }
   async fetchWeather() {
     const options = {
@@ -102,6 +101,31 @@ export default class WeatherApi {
     };
     const { data } = await axios(CITY_URL, options);
     return data;
+  }
+  async getCityFromCoordinates() {
+    const URL = `https://nominatim.openstreetmap.org/reverse`;
+    const options = {
+      params: {
+        format: 'jsonv2',
+        lat: this.lat,
+        lon: this.long,
+      },
+      headers: {
+        'accept-language': 'en',
+      },
+    };
+    const { data } = await axios.get(URL, options);
+
+    const city =
+      data.address.city ||
+      data.address.town ||
+      data.address.village ||
+      data.address.hamlet;
+
+    this.city = city;
+    if (data.address.country_code === 'ua') {
+      this.timezone = 'Europe/Kiev';
+    }
   }
   resetTimezone() {
     this.timezone = 'auto';

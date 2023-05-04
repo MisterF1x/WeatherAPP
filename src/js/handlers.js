@@ -16,41 +16,23 @@ import {
   showLoader,
   getDataInUnit,
   renderHourlyDailyWeather,
+  getGeolocation,
 } from './services';
 
 export const weatherApi = new WeatherApi();
+
 export const onLoadWindow = async () => {
   Loading.pulse();
   try {
-    await weatherApi.setGeolocation();
-
-    const { hourly, daily, current_weather, hourly_units } =
-      await weatherApi.fetchWeather();
-    const airQuality = await weatherApi.fetchAirQuality();
-
-    renderMarkup(
-      refs.currentCondition,
-      markupCurrentCondition(hourly, daily, current_weather, hourly_units)
-    );
-    renderMarkup(
-      refs.weatherLights,
-      markupHourlyWeather(hourly, daily, current_weather)
-    );
-    renderMarkup(
-      refs.highlights,
-      markupTodayHighligts(
-        hourly,
-        daily,
-        current_weather,
-        hourly_units,
-        airQuality
-      )
-    );
+    if ('geolocation' in navigator) {
+      getGeolocation();
+    } else {
+      await weatherApi.setGeolocation();
+      Loading.remove();
+    }
   } catch (error) {
-    // Notify.failure('Something went wrong');
+    Notify.failure('Something went wrong');
     console.error(error.message);
-  } finally {
-    Loading.remove(300);
   }
 };
 export const onInputSearchCities = async evt => {

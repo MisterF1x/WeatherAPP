@@ -8,7 +8,58 @@ import {
   markupDailyWeather,
   markupHourlyWeather,
   renderMarkup,
+  renderWeatherMarkup,
 } from './render';
+import { Loading } from 'notiflix';
+
+export const getGeolocation = () => {
+  const options = {
+    enableHighAccuracy: true,
+    timeout: 5000,
+    maximumAge: 0,
+  };
+
+  async function success(pos) {
+    try {
+      const crd = pos.coords;
+      weatherApi.latitude = crd.latitude.toFixed(2);
+      weatherApi.longitude = crd.longitude.toFixed(2);
+
+      const { hourly, daily, current_weather, hourly_units } =
+        await weatherApi.fetchWeather();
+      const airQuality = await weatherApi.fetchAirQuality();
+      await weatherApi.getCityFromCoordinates();
+
+      renderWeatherMarkup(
+        hourly,
+        daily,
+        current_weather,
+        hourly_units,
+        airQuality
+      );
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      Loading.remove();
+    }
+  }
+
+  async function error() {
+    await weatherApi.setGeolocation();
+    const { hourly, daily, current_weather, hourly_units } =
+      await weatherApi.fetchWeather();
+    const airQuality = await weatherApi.fetchAirQuality();
+    renderWeatherMarkup(
+      hourly,
+      daily,
+      current_weather,
+      hourly_units,
+      airQuality
+    );
+    Loading.remove();
+  }
+  navigator.geolocation.getCurrentPosition(success, error, options);
+};
 
 const isDay = (sunrise, sunset, localTime) => {
   const timeSunrise = new Date(sunrise).getHours();

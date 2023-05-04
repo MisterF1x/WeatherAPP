@@ -100,6 +100,10 @@
     &:hover {
       background-color: $color-primary;
     }
+    & span {
+      color: $color-grey-dark;
+      pointer-events: none;
+    }
   }
 }
 
@@ -148,14 +152,12 @@
     font-size: 1.5rem;
     align-self: end;
     padding-bottom: 1rem;
-    color: #666;
   }
 
   &__wrap-img {
     display: flex;
     justify-content: center;
     align-items: center;
-    // margin-top: -2rem;
     background: radial-gradient(
       circle,
       rgba(168, 200, 249, 0.826) 0%,
@@ -203,7 +205,6 @@
     color: #666;
   }
   &__icon {
-    color: #666;
     margin-right: 1rem;
   }
 }
@@ -256,6 +257,7 @@
 }
 .weather-lights {
   &__items {
+    border-radius: 1.5rem;
     font-family: $font-primary;
     background-color: #fff;
   }
@@ -385,80 +387,6 @@
     font-weight: 600;
   }
 }
-// TOGGLE CONTROL STYLE
-
-// .toggle-control {
-//   display: block;
-//   position: relative;
-//   padding-left: $toggle-width;
-//   cursor: pointer;
-//   font-size: 1rem;
-//   user-select: none;
-
-//   input {
-//     position: absolute;
-//     opacity: 0;
-//     cursor: pointer;
-//     height: 0;
-//     width: 0;
-//   }
-
-//   input:checked ~ .control {
-//     background-color: $toggle-background-color-on;
-
-//     &::before {
-//       background: $toggle-background-color-on;
-//       left: $toggle-width - ($toggle-control-size * 1.4) - $toggle-gutter;
-//       transform: scale(1);
-//     }
-
-//     &::after {
-//       background: $color-white;
-//       left: $toggle-width - $toggle-control-size - $toggle-gutter;
-//     }
-//   }
-
-//   .control {
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     height: $toggle-height;
-//     width: $toggle-width;
-//     border-radius: $toggle-radius;
-//     background-color: $toggle-background-color-off;
-//     transition: background-color $transition-speed $cubic;
-
-//     &::before {
-//       content: '';
-//       position: absolute;
-//       width: calc($toggle-control-size / 1);
-//       height: calc($toggle-control-size / 1);
-//       left: 0px;
-//       top: 0px;
-//       border-radius: 50%;
-
-//       transform: scale(0);
-
-//       background: $toggle-background-color-off;
-//       z-index: 5;
-
-//       transition: all $transition-speed $cubic;
-//     }
-
-//     &::after {
-//       content: '';
-//       position: absolute;
-//       left: $toggle-gutter;
-//       top: $toggle-gutter;
-//       width: $toggle-control-size;
-//       height: $toggle-control-size;
-//       border-radius: $toggle-radius;
-//       background: $color-tertiary-light;
-//       transition: all $transition-speed $cubic;
-//     }
-//   }
-// }
-
 // BUTTON STYLE
 .btn {
   font-family: inherit;
