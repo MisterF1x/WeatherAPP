@@ -1,3 +1,25 @@
+@media only screen and (min-width: 300px) {
+  .location {
+    &__item:last-child {
+      color: $color-primary;
+    }
+  }
+  .current-condition {
+    &__fill {
+      color: $color-primary;
+    }
+  }
+  .detail-list {
+    &__text {
+      font-size: 2rem;
+    }
+  }
+  .sunrise-sunset {
+    &__time {
+      font-size: 1.4rem;
+    }
+  }
+}
 @media only screen and (min-width: 500px) {
   .sidebar {
     min-height: 57.5rem;
@@ -29,15 +51,9 @@
     &__img {
       stroke: $color-white;
     }
-    &__fill {
-      color: $color-primary;
-    }
   }
   .location {
     width: 100%;
-    &__item:last-child {
-      color: $color-primary;
-    }
   }
   .weather-lights {
     &__items {

@@ -12,7 +12,7 @@ import {
 } from './render';
 import { Loading } from 'notiflix';
 
-export const getGeolocation = () => {
+export const getWeatherByGeolocation = () => {
   const options = {
     enableHighAccuracy: true,
     timeout: 5000,
@@ -38,7 +38,7 @@ export const getGeolocation = () => {
         airQuality
       );
     } catch (error) {
-      console.error(error.message);
+      console.error(error);
     } finally {
       Loading.remove();
     }

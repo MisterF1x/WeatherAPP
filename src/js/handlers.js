@@ -16,7 +16,7 @@ import {
   showLoader,
   getDataInUnit,
   renderHourlyDailyWeather,
-  getGeolocation,
+  getWeatherByGeolocation,
 } from './services';
 
 export const weatherApi = new WeatherApi();
@@ -25,7 +25,7 @@ export const onLoadWindow = async () => {
   Loading.pulse();
   try {
     if (navigator.geolocation) {
-      getGeolocation();
+      getWeatherByGeolocation();
     } else {
       await weatherApi.setGeolocation();
       Loading.remove();
