@@ -24,7 +24,7 @@ export const weatherApi = new WeatherApi();
 export const onLoadWindow = async () => {
   Loading.pulse();
   try {
-    if ('geolocation' in navigator) {
+    if (navigator.geolocation) {
       getGeolocation();
     } else {
       await weatherApi.setGeolocation();
