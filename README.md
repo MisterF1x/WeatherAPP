@@ -1,4 +1,4 @@
-# WeatherAPP<img src='./src/img/fill/svg-static/day/overcast-day.svg' alt='weather app' width='50px'/>
+# WeatherAPP<img src='./src/src/assets/images/fill/svg-static/day/overcast-day.svg' alt='weather app' width='50px'/>
 
 Welcome to my project! This web
 [weather app](https://misterf1x.github.io/WeatherAPP/) is a web-based
