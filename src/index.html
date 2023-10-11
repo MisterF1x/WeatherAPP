@@ -7,19 +7,19 @@
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="./img/favicon/apple-touch-icon.png"
+      href="./assets/images/favicon/apple-touch-icon.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="./img/favicon/favicon-32x32.png"
+      href="./assets/images/favicon/favicon-32x32.png"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="./img/favicon/favicon-16x16.png"
+      href="./assets/images/favicon/favicon-16x16.png"
     />
     <link rel="stylesheet" href="./sass/main.scss" />
     <title>Weather APP</title>
@@ -42,7 +42,7 @@
               placeholder="Search for places..."
             />
             <svg class="search-block__icon icon">
-              <use href="./img/sprite.svg#icon-search"></use>
+              <use href="./assets/images/sprite.svg#icon-search"></use>
             </svg>
           </label>
           <ul class="search-block__list" aria-label="select_city"></ul>
@@ -52,22 +52,20 @@
       <section class="weather">
         <h2 class="visually-hidden">Hourly and daily weather</h2>
         <header class="navigation">
-          <ul class="nav-list">
+          <ul class="nav-list" data-weather="options">
             <li class="nav-list__item">
-              <a href="#" class="nav-list__link current" data-state="open"
-                >Today</a
-              >
+              <a href="#today" class="nav-list__link">Today</a>
             </li>
             <li class="nav-list__item">
-              <a href="#" class="nav-list__link" data-state="close">Week</a>
+              <a href="#week" class="nav-list__link">Week</a>
             </li>
           </ul>
           <ul class="temp-changer">
             <li class="temp-changer__item">
               <button
-                class="celsius-btn btn current__btn"
+                class="celsius-btn btn"
                 type="button"
-                data-state="open"
+                data-loaded="true"
                 data-value="celsius"
               >
                 &deg;C
@@ -77,7 +75,7 @@
               <button
                 class="fahrenheit-btn btn"
                 type="button"
-                data-state="close"
+                data-loaded="false"
                 data-value="fahrenheit"
               >
                 &deg;F
@@ -85,18 +83,20 @@
             </li>
           </ul>
         </header>
-        <div class="swiper weather-lights">
-          <div class="swiper-wrapper"></div>
+        <div class="weather-list">
           <span class="loader hide"></span>
-          <div class="swiper-button-prev">
-            <svg class="swiper-button-icon">
-              <use href="./img/sprite.svg#icon-circle-left"></use>
-            </svg>
-          </div>
-          <div class="swiper-button-next">
-            <svg class="swiper-button-icon">
-              <use href="./img/sprite.svg#icon-circle-right"></use>
-            </svg>
+          <div class="swiper">
+            <div class="swiper-wrapper"></div>
+            <div class="swiper-button-prev">
+              <svg class="swiper-button-icon">
+                <use href="./assets/images/sprite.svg#icon-circle-left"></use>
+              </svg>
+            </div>
+            <div class="swiper-button-next">
+              <svg class="swiper-button-icon">
+                <use href="./assets/images/sprite.svg#icon-circle-right"></use>
+              </svg>
+            </div>
           </div>
         </div>
       </section>

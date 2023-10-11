@@ -1,72 +1,19 @@
-import * as iconsDay from '../img/fill/svg-static/day/*.svg';
-import * as iconsNight from '../img/fill/svg-static/night/*.svg';
-import * as iconsDaily from '../img/fill/svg-static/daily-icons/*.svg';
-import * as uvIndex from '../img/fill/svg-static/uv-index/*.svg';
+import * as iconsDay from '../assets/images/fill/svg-static/day/*.svg';
+import * as iconsNight from '../assets/images/fill/svg-static/night/*.svg';
+import * as iconsDaily from '../assets/images/fill/svg-static/daily-icons/*.svg';
+import * as uvIndex from '../assets/images/fill/svg-static/uv-index/*.svg';
 import { refs } from './refs';
-import { weatherApi } from './handlers';
-import {
-  markupDailyWeather,
-  markupHourlyWeather,
-  renderMarkup,
-  renderWeatherMarkup,
-} from './render';
-import { Loading } from 'notiflix';
+import { errorMessage } from './constants';
+import { format, parseISO } from 'date-fns';
 
-export const getWeatherByGeolocation = () => {
-  const options = {
-    enableHighAccuracy: true,
-    timeout: 5000,
-    maximumAge: 0,
-  };
-
-  async function success(pos) {
-    try {
-      const crd = pos.coords;
-      weatherApi.latitude = crd.latitude.toFixed(2);
-      weatherApi.longitude = crd.longitude.toFixed(2);
-
-      const { hourly, daily, current_weather, hourly_units } =
-        await weatherApi.fetchWeather();
-      const airQuality = await weatherApi.fetchAirQuality();
-      await weatherApi.getCityFromCoordinates();
-
-      renderWeatherMarkup(
-        hourly,
-        daily,
-        current_weather,
-        hourly_units,
-        airQuality
-      );
-    } catch (error) {
-      console.error(error);
-    } finally {
-      Loading.remove();
-    }
-  }
-
-  async function error() {
-    await weatherApi.setGeolocation();
-    const { hourly, daily, current_weather, hourly_units } =
-      await weatherApi.fetchWeather();
-    const airQuality = await weatherApi.fetchAirQuality();
-    renderWeatherMarkup(
-      hourly,
-      daily,
-      current_weather,
-      hourly_units,
-      airQuality
-    );
-    Loading.remove();
-  }
-  navigator.geolocation.getCurrentPosition(success, error, options);
-};
-
-const isDay = (sunrise, sunset, localTime) => {
+// ---Weather services
+const getDayOrNight = (sunrise, sunset, localTime) => {
   const timeSunrise = new Date(sunrise).getHours();
   const timeSunset = new Date(sunset).getHours();
-  const todayTime = new Date(localTime).getHours();
-  return todayTime >= timeSunrise && todayTime <= timeSunset ? true : false;
+  const currentTime = new Date(localTime).getHours();
+  return currentTime >= timeSunrise && currentTime <= timeSunset;
 };
+
 export const getIconWeather = (
   weathercode,
   sunrise,
@@ -75,27 +22,27 @@ export const getIconWeather = (
   time
 ) => {
   if (weathercode === 0) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['clear-day']
       : iconsNight['clear-night'];
   }
   if (weathercode === 1) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['partly-cloudy-day']
       : iconsNight['partly-cloudy-night'];
   }
   if (weathercode === 2) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['overcast-day']
       : iconsNight['overcast-night'];
   }
   if (weathercode === 3) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['extreme-day']
       : iconsNight['extreme-night'];
   }
   if (weathercode === 45) {
-    if (isDay(sunrise, sunset, time)) {
+    if (getDayOrNight(sunrise, sunset, time)) {
       if (cloudcover < 25) {
         return iconsDay['fog-day'];
       }
@@ -114,7 +61,7 @@ export const getIconWeather = (
     }
   }
   if (weathercode === 48) {
-    if (isDay(sunrise, sunset, time)) {
+    if (getDayOrNight(sunrise, sunset, time)) {
       if (cloudcover < 25) {
         return iconsDay['haze-day'];
       }
@@ -133,7 +80,7 @@ export const getIconWeather = (
     }
   }
   if (weathercode === 51 || weathercode === 53 || weathercode === 55) {
-    if (isDay(sunrise, sunset, time)) {
+    if (getDayOrNight(sunrise, sunset, time)) {
       if (cloudcover < 25) {
         return iconsDay['partly-cloudy-day-drizzle'];
       }
@@ -152,7 +99,7 @@ export const getIconWeather = (
     }
   }
   if (weathercode === 56 || weathercode === 57) {
-    if (isDay(sunrise, sunset, time)) {
+    if (getDayOrNight(sunrise, sunset, time)) {
       if (cloudcover < 25) {
         return iconsDay['partly-cloudy-day-sleet'];
       }
@@ -171,22 +118,22 @@ export const getIconWeather = (
     }
   }
   if (weathercode === 61 || weathercode === 80) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['partly-cloudy-day-rain']
       : iconsNight['partly-cloudy-night-rain'];
   }
   if (weathercode === 63 || weathercode === 81) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['overcast-day-rain']
       : iconsNight['overcast-night-rain'];
   }
   if (weathercode === 65 || weathercode === 82) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['extreme-day-rain']
       : iconsNight['extreme-night-rain'];
   }
   if (weathercode === 66 || weathercode === 67) {
-    if (isDay(sunrise, sunset, time)) {
+    if (getDayOrNight(sunrise, sunset, time)) {
       if (cloudcover < 25) {
         return iconsDay['partly-cloudy-day-sleet'];
       }
@@ -205,37 +152,37 @@ export const getIconWeather = (
     }
   }
   if (weathercode === 71 || weathercode === 85) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['partly-cloudy-day-snow']
       : iconsNight['partly-cloudy-night-snow'];
   }
   if (weathercode === 73) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['overcast-day-snow']
       : iconsNight['overcast-night-snow'];
   }
   if (weathercode === 75 || weathercode === 77 || weathercode === 86) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['extreme-day-snow']
       : iconsNight['extreme-night-snow'];
   }
   if (weathercode === 95 || weathercode === 96) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['thunderstorms-day-overcast-rain']
       : iconsNight['thunderstorms-night-overcast-rain'];
   }
   if (weathercode === 99) {
-    return isDay(sunrise, sunset, time)
+    return getDayOrNight(sunrise, sunset, time)
       ? iconsDay['thunderstorms-day-extreme-rain']
       : iconsNight['thunderstorms-night-extreme-rain'];
   }
 };
 export const getIconDailyWeather = (weathercode, sunrise, sunset, time) => {
-  const isDayTime = isDay(sunrise, sunset, time);
+  const isDay = getDayOrNight(sunrise, sunset, time);
 
   const iconMap = {
-    0: isDayTime ? iconsDay['clear-day'] : iconsNight['clear-night'],
-    1: isDayTime
+    0: isDay ? iconsDay['clear-day'] : iconsNight['clear-night'],
+    1: isDay
       ? iconsDay['partly-cloudy-day']
       : iconsNight['partly-cloudy-night'],
     2: iconsDaily['overcast'],
@@ -272,11 +219,15 @@ export const getIconDailyWeather = (weathercode, sunrise, sunset, time) => {
 export const getWeatherText = (weathercode, sunrise, sunset, time) => {
   switch (weathercode) {
     case 0:
-      return isDay(sunrise, sunset, time) ? 'Sunny' : 'Clear sky';
+      return getDayOrNight(sunrise, sunset, time) ? 'Sunny' : 'Clear sky';
     case 1:
-      return isDay(sunrise, sunset, time) ? 'Mostly Sunny' : 'Mostly Clear';
+      return getDayOrNight(sunrise, sunset, time)
+        ? 'Mostly Sunny'
+        : 'Mostly Clear';
     case 2:
-      return isDay(sunrise, sunset, time) ? 'Partly Sunny' : 'Partly Cloudy';
+      return getDayOrNight(sunrise, sunset, time)
+        ? 'Partly Sunny'
+        : 'Partly Cloudy';
     case 3:
       return 'Cloudy';
     case 45:
@@ -423,7 +374,7 @@ export const getIconSecondaryCondition = (
   }
   switch (weathercode) {
     case 0:
-      return isDay(sunrise, sunset, time) ? 'clearday' : 'clearnight';
+      return getDayOrNight(sunrise, sunset, time) ? 'clearday' : 'clearnight';
     case 1:
     case 2:
     case 3:
@@ -460,9 +411,6 @@ export const getIconSecondaryCondition = (
     default:
       return 'cloudy';
   }
-};
-export const unitChanger = tempUnit => {
-  return tempUnit === '°F' ? 'fahrenheit' : 'celsius';
 };
 export const relativeHumidity = humidity => {
   if (humidity < 20) {
@@ -530,37 +478,171 @@ export const getUvindexIcon = (uvi = 0) => {
 
   return uvIndexMap[uvi] || uvIndex['uv-index'];
 };
-export const clearHtml = el => {
-  el.innerHTML = '';
-};
-export const clearInput = () => {
-  refs.input.value = '';
-};
-export const showLoader = () => {
-  refs.loader.classList.remove('hide');
-};
-export const hideLoader = () => {
-  refs.loader.classList.add('hide');
-};
-export const getDataInUnit = async unit => {
-  return (await unit) === 'fahrenheit'
-    ? weatherApi.fetchWeatherInFarenheit()
-    : weatherApi.fetchWeather();
-};
-export const renderHourlyDailyWeather = (
-  dailyWeather,
-  hourly,
-  daily,
-  current_weather
-) => {
-  const markup = dailyWeather
-    ? markupHourlyWeather(hourly, daily, current_weather)
-    : markupDailyWeather(daily, current_weather);
-  renderMarkup(refs.weatherLights, markup);
-};
+
+//---Helpers
 export const closestDate = (dates, targetDate) =>
   dates.reduce((prev, curr) => {
     const prevDiff = Math.abs(new Date(prev) - new Date(targetDate));
     const currDiff = Math.abs(new Date(curr) - new Date(targetDate));
     return currDiff < prevDiff ? curr : prev;
   });
+
+export const getURLHash = () => document.location.hash.slice(1);
+
+export const clearHtml = el => {
+  el.innerHTML = '';
+};
+
+export const clearInput = () => {
+  refs.input.value = '';
+};
+
+export const showLoader = () => {
+  refs.loader.classList.remove('hide');
+};
+
+export const hideLoader = () => {
+  refs.loader.classList.add('hide');
+};
+
+export const checkGeoError = error => {
+  switch (error.code) {
+    case error.PERMISSION_DENIED:
+      console.error(errorMessage.GEO_DENIED);
+      break;
+    case error.POSITION_UNAVAILABLE:
+      console.error(errorMessage.GEO_UNAVAILABLE);
+      break;
+    case error.TIMEOUT:
+      console.error(errorMessage.GEO_TIME_OUT);
+      break;
+    default:
+      console.error(errorMessage.GEO_UNKONW);
+  }
+};
+
+// ---Transforming Data
+export const transformDataForMainCard = (
+  hourly,
+  daily,
+  current_weather,
+  hourly_units,
+  city,
+  index
+) => {
+  const parsedTime = parseISO(current_weather.time);
+
+  const precipitation = !hourly?.precipitation_probability[index]
+    ? 'No Precipitation'
+    : `${hourly.precipitation_probability[index]}%`;
+
+  const windy = windyDay(
+    hourly.windspeed_10m[index],
+    hourly_units['windspeed_10m']
+  )
+    ? `/${windyDay(windspeed_10m[index], hourly_units['windspeed_10m'])}`
+    : '';
+  const icon = getIconWeather(
+    hourly.weathercode[index],
+    daily.sunrise[0],
+    daily.sunset[0],
+    hourly.cloudcover[index],
+    current_weather.time
+  );
+  const text = getWeatherText(
+    hourly.weathercode[index],
+    daily.sunrise[0],
+    daily.sunset[0],
+    current_weather.time
+  );
+  const iconSecondary = getIconSecondaryCondition(
+    hourly.weathercode[index],
+    hourly.windspeed_10m[index],
+    hourly_units['windspeed_10m'],
+    daily.sunrise[0],
+    daily.sunset[0],
+    current_weather.time
+  );
+  const temperature = Math.round(hourly.temperature_2m[index]);
+  const fillTemperature = Math.round(hourly.apparent_temperature[index]);
+
+  return {
+    icon,
+    iconSecondary,
+    text,
+    parsedTime,
+    windy,
+    precipitation,
+    temperature,
+    fillTemperature,
+    city,
+    temperatureUnit: hourly_units.temperature_2m,
+  };
+};
+
+export const transformDataForDailyHourlyCard = (
+  hourly,
+  daily,
+  current_weather,
+  type,
+  index
+) => {
+  const length = type.toLowerCase() !== 'today' ? daily?.time.length : 25;
+  return Array.from({ length }).map((_, i) => {
+    return {
+      icon:
+        type.toLowerCase() !== 'today'
+          ? getIconDailyWeather(
+              daily.weathercode[i],
+              daily.sunrise[0],
+              daily.sunset[0],
+              current_weather.time
+            )
+          : getIconWeather(
+              hourly.weathercode[i + index],
+              daily.sunrise[0],
+              daily.sunset[0],
+              hourly.cloudcover[i + index],
+              hourly.time[i + index]
+            ),
+      text:
+        type.toLowerCase() !== 'today'
+          ? getWeatherText(
+              daily.weathercode[i],
+              daily.sunrise[0],
+              daily.sunset[0],
+              current_weather.time
+            )
+          : getWeatherText(
+              hourly.weathercode[i + index],
+              daily.sunrise[0],
+              daily.sunset[0],
+              hourly.time[i + index]
+            ),
+      time:
+        type.toLowerCase() !== 'today'
+          ? format(parseISO(daily.time[i]), 'd iii')
+          : format(parseISO(hourly.time[i + index]), 'h aaa'),
+      temperatureM: {
+        temp:
+          type.toLowerCase() !== 'today'
+            ? Math.round(daily.temperature_2m_max[i])
+            : Math.round(hourly.temperature_2m[i + index]),
+        title:
+          type.toLowerCase() !== 'today'
+            ? 'Max temperature'
+            : 'Current temperature',
+      },
+      temperatureH: {
+        temp:
+          type.toLowerCase() !== 'today'
+            ? Math.round(daily.temperature_2m_min[i])
+            : Math.round(hourly.apparent_temperature[i + index]),
+        title:
+          type.toLowerCase() !== 'today'
+            ? 'Min temperature'
+            : 'Fills temperature',
+      },
+    };
+  });
+};

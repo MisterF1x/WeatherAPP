@@ -1,148 +1,157 @@
 import axios from 'axios';
-const GEO_URL = 'https://ipgeolocation.abstractapi.com/v1';
-const WEATHER_URL = 'https://api.open-meteo.com/v1/forecast';
-const AIR_QUALITY_URL = 'https://air-quality-api.open-meteo.com/v1/air-quality';
-const CITY_URL = 'https://geocoding-api.open-meteo.com/v1/search';
+import { URL, errorMessage, weatherParams } from './constants';
 
-export default class WeatherApi {
-  constructor() {
-    this.long = 0;
-    this.lat = 0;
-    this.timezone = 'auto';
-    this.city = '';
-    this.copySearchedCity = [];
-    this.weatherUnit = '';
-    this.dailyWeather = false;
+export class GeolocationApi {
+  async getGeolocationByApi() {
+    return new Promise((resolve, reject) => {
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          async position => {
+            const { latitude } = position.coords;
+            const { longitude } = position.coords;
+            try {
+              const data = await this.getCityByCoordinates(latitude, longitude);
+              resolve({ latitude, longitude, ...data });
+            } catch (error) {
+              reject(error);
+            }
+          },
+          error => {
+            reject(error);
+          }
+        );
+      } else {
+        reject(new Error(errorMessage.GEO_NOT));
+      }
+    });
   }
-  async setGeolocation() {
+  async getGeolocationByIp() {
     const options = {
       params: {
         api_key: '0a99fae2ae7f4897b5e4f52e3a19db1e',
         fields: 'latitude,longitude,timezone,city,country_code',
       },
     };
-    const { data } = await axios(GEO_URL, options);
-    this.long = data.longitude;
-    this.lat = data.latitude;
-    this.city = data.city;
-    if (data.country_code === 'UA') {
-      this.timezone = 'Europe/Kiev';
-    }
+    const {
+      data: { longitude, latitude, city, country_code },
+    } = await axios(URL.GEO, options);
+    return { longitude, latitude, city, country_code };
   }
-  async fetchWeather() {
-    const options = {
-      params: {
-        latitude: this.lat,
-        longitude: this.long,
-        current_weather: 'true',
-        daily:
-          'weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max',
-        hourly:
-          'temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,precipitation_probability,weathercode,surface_pressure,cloudcover,visibility,windspeed_10m,winddirection_10m',
-        timezone: this.timezone,
-      },
-    };
-    const { data } = await axios(WEATHER_URL, options);
-    return data;
-  }
-  async fetchWeatherInFarenheit() {
-    const options = {
-      params: {
-        latitude: this.lat,
-        longitude: this.long,
-        current_weather: 'true',
-        daily:
-          'weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max',
-        hourly:
-          'temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,precipitation_probability,weathercode,surface_pressure,cloudcover,visibility,windspeed_10m,winddirection_10m',
-        timezone: this.timezone,
-        temperature_unit: 'fahrenheit',
-        windspeed_unit: 'mph',
-      },
-    };
-    const { data } = await axios(WEATHER_URL, options);
-    return data;
-  }
-  async fetchAirQuality() {
-    const options = {
-      params: {
-        latitude: this.lat,
-        longitude: this.long,
-        hourly: 'european_aqi,us_aqi',
-        timezone: this.timezone,
-      },
-    };
-    const { data } = await axios(AIR_QUALITY_URL, options);
-    return data;
-  }
-  async setFarenheitUnit() {
-    const options = {
-      params: {
-        latitude: this.lat,
-        longitude: this.long,
-        current_weather: 'true',
-        daily:
-          'weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,uv_index_max',
-        hourly:
-          'temperature_2m,relativehumidity_2m,dewpoint_2m,apparent_temperature,precipitation_probability,weathercode,surface_pressure,cloudcover,visibility,windspeed_10m,winddirection_10m',
-        timezone: this.timezone,
-        temperature_unit: 'fahrenheit',
-        windspeed_unit: 'mph',
-      },
-    };
-    const { data } = await axios(WEATHER_URL, options);
-    return data;
-  }
-  async fetchCities(name) {
-    const options = {
-      params: {
-        name: name,
-      },
-    };
-    const { data } = await axios(CITY_URL, options);
-    return data;
-  }
-  async getCityFromCoordinates() {
-    const URL = `https://nominatim.openstreetmap.org/reverse`;
+  async getCityByCoordinates(latitude, longitude) {
     const options = {
       params: {
         format: 'jsonv2',
-        lat: this.lat,
-        lon: this.long,
+        lat: latitude,
+        lon: longitude,
       },
       headers: {
         'accept-language': 'en',
       },
     };
-    const { data } = await axios.get(URL, options);
+    const { data } = await axios(URL.OPEN_STREET, options);
 
     const city =
       data.address.city ||
       data.address.town ||
       data.address.village ||
       data.address.hamlet;
-
-    this.city = city;
-    if (data.address.country_code === 'ua') {
-      this.timezone = 'Europe/Kiev';
+    return { city, country_code: data.address.country_code };
+  }
+  async getGeolocation() {
+    try {
+      return await this.getGeolocationByApi();
+    } catch (error) {
+      return await this.getGeolocationByIp();
     }
   }
-  resetTimezone() {
-    this.timezone = 'auto';
+}
+
+export class WeatherApi extends GeolocationApi {
+  constructor() {
+    super();
   }
-  get latitude() {
-    return this.lat;
+  async getWeather(latitude, longitude, countryCode, weatherUnit) {
+    this.timezone =
+      countryCode?.toLowerCase() === 'ua' ? 'Europe/Kiev' : 'auto';
+    const options =
+      weatherUnit === 'celsius'
+        ? {
+            params: {
+              latitude,
+              longitude,
+              current_weather: 'true',
+              daily: weatherParams.DAILY,
+              hourly: weatherParams.HOURLY,
+              timezone: this.timezone,
+            },
+          }
+        : {
+            params: {
+              latitude,
+              longitude,
+              current_weather: 'true',
+              daily: weatherParams.DAILY,
+              hourly: weatherParams.HOURLY,
+              timezone: this.timezone,
+              temperature_unit: 'fahrenheit',
+              windspeed_unit: 'mph',
+            },
+          };
+    const { data } = await axios(URL.WEATHER, options);
+    return data;
   }
-  set latitude(newLatitude) {
-    this.lat = newLatitude;
+  async getAirQuality(latitude, longitude) {
+    const options = {
+      params: {
+        latitude,
+        longitude,
+        hourly: 'european_aqi,us_aqi',
+        timezone: this.timezone,
+      },
+    };
+    const { data } = await axios(URL.AIR_QUALITY, options);
+    return data;
   }
-  get longitude() {
-    return this.long;
+  async init(unit = 'celsius') {
+    const { latitude, longitude, countryCode, city } =
+      await this.getGeolocation();
+    const weatherData = await this.getWeather(
+      latitude,
+      longitude,
+      countryCode,
+      unit
+    );
+    const airQualityData = await this.getAirQuality(latitude, longitude);
+
+    return {
+      ...weatherData,
+      airData: { ...airQualityData },
+      city,
+      countryCode,
+    };
   }
-  set longitude(newLongitude) {
-    this.long = newLongitude;
+}
+
+export class CitiesApi {
+  constructor() {
+    this.data = [];
   }
-  resetdailyWeather() {
-    this.dailyWeather = false;
+  async getCities(name) {
+    const options = {
+      params: {
+        name,
+      },
+    };
+    const {
+      data: { results },
+    } = await axios(URL.CITY, options);
+    this.data = results;
+  }
+  get cities() {
+    return this.cities;
+  }
+
+  set cities(value) {
+    this.cities = value;
   }
 }

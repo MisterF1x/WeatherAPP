@@ -40,7 +40,6 @@
   }
 
   &__input {
-    // font-size: 1.8rem;
     height: 2rem;
     font-family: $font-primary;
     color: #212121;
@@ -76,8 +75,10 @@
     background-color: $color-white;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
+    z-index: 3;
   }
   &__btn {
+    display: flex;
     font-size: 1.6rem;
   }
 
@@ -89,6 +90,7 @@
     border-color: transparent;
     background-color: transparent;
     transition: background-color $transition-speed $cubic;
+    text-align: left;
 
     &:not(:last-child) {
       border-bottom: 1px solid $color-grey-dark-2;
@@ -98,7 +100,7 @@
     }
 
     &:hover {
-      background-color: $color-primary;
+      background-color: $color-grey-light-1;
     }
     & span {
       color: $color-grey-dark;
@@ -135,6 +137,9 @@
     font-size: 8rem;
     font-weight: 600;
     line-height: 1;
+    & span {
+      font-size: 3rem;
+    }
   }
 
   &__celsius-main {
@@ -152,6 +157,9 @@
     font-size: 1.5rem;
     align-self: end;
     padding-bottom: 1rem;
+    & span {
+      font-size: 0.7rem;
+    }
   }
 
   &__wrap-img {
@@ -164,6 +172,7 @@
       rgba(9, 9, 121, 0) 65%
     );
     & img {
+      animation: pulse 6s infinite;
       max-width: 80%;
     }
   }
@@ -210,6 +219,13 @@
 }
 
 // HOURS WEATHER BLOCK
+.weather-list {
+  position: relative;
+  padding: 0 1rem;
+  .swiper {
+    padding: 8px 0;
+  }
+}
 .weather {
   display: flex;
   flex-direction: column;
@@ -291,7 +307,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  // justify-content: end;
   padding: 2rem 1rem;
   min-height: 38rem;
 
@@ -301,6 +316,7 @@
     margin-bottom: 2rem;
   }
 }
+
 //DETAIL LIST
 
 .detail-list {
@@ -387,6 +403,7 @@
     font-weight: 600;
   }
 }
+
 // BUTTON STYLE
 .btn {
   font-family: inherit;
@@ -408,12 +425,8 @@
     height: 2rem;
     fill: currentColor;
   }
-  &:hover {
-    background-color: $color-black;
-    color: #fff;
-  }
 }
-// icons style
+// ICONS STYLE
 .icon {
   fill: currentColor;
   width: 2rem;
@@ -481,56 +494,18 @@
   animation: shadowRolling 2s linear infinite;
 }
 
-@keyframes shadowRolling {
-  0% {
-    box-shadow: 0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0),
-      0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
-  }
-  12% {
-    box-shadow: 100px 0 rgb(162, 162, 162), 0px 0 rgba(255, 255, 255, 0),
-      0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
-  }
-  25% {
-    box-shadow: 110px 0 rgb(162, 162, 162), 100px 0 rgb(162, 162, 162),
-      0px 0 rgba(255, 255, 255, 0), 0px 0 rgba(255, 255, 255, 0);
-  }
-  36% {
-    box-shadow: 120px 0 rgb(162, 162, 162), 110px 0 rgb(162, 162, 162),
-      100px 0 rgb(162, 162, 162), 0px 0 rgba(255, 255, 255, 0);
-  }
-  50% {
-    box-shadow: 130px 0 rgb(162, 162, 162), 120px 0 rgb(162, 162, 162),
-      110px 0 rgb(162, 162, 162), 100px 0 rgb(162, 162, 162);
-  }
-  62% {
-    box-shadow: 200px 0 rgba(255, 255, 255, 0), 130px 0 rgb(162, 162, 162),
-      120px 0 rgb(162, 162, 162), 110px 0 rgb(162, 162, 162);
-  }
-  75% {
-    box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0),
-      130px 0 rgb(162, 162, 162), 120px 0 rgb(162, 162, 162);
-  }
-  87% {
-    box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0),
-      200px 0 rgba(255, 255, 255, 0), 130px 0 rgb(162, 162, 162);
-  }
-  100% {
-    box-shadow: 200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0),
-      200px 0 rgba(255, 255, 255, 0), 200px 0 rgba(255, 255, 255, 0);
-  }
-}
 // UTILITIES
 .hide {
   display: none;
   opacity: 0;
   transition: opacity $transition-speed $cubic;
 }
-.current {
-  &__btn {
-    background-color: $color-black;
-    color: $color-white;
-  }
+.current__btn,
+button[data-loaded='true'] {
+  background-color: $color-black;
+  color: $color-white;
 }
+
 // style for scalable on iOS
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
   select,
