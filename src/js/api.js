@@ -54,7 +54,8 @@ export class GeolocationApi {
       data.address.city ||
       data.address.town ||
       data.address.village ||
-      data.address.hamlet;
+      data.address.hamlet ||
+      data.address.state;
     return { city, country_code: data.address.country_code };
   }
   async getGeolocation() {
