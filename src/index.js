@@ -65,8 +65,10 @@ class App extends Store {
   }
   setActiveButton(evt) {
     const activeBtn = document.querySelector('[data-loaded="true"]');
-    evt.target.dataset.loaded = 'true';
-    activeBtn.dataset.loaded = 'false';
+    if (evt.target.dataset.loaded === 'false') {
+      evt.target.dataset.loaded = 'true';
+      activeBtn.dataset.loaded = 'false';
+    }
   }
 
   handleError(error) {
@@ -106,7 +108,7 @@ class App extends Store {
       listener: async evt => {
         const { latitude, longitude, countryCode } = this.state;
         if (
-          evt.target.nodeName === 'BUTTON' ||
+          evt.target.nodeName === 'BUTTON' &&
           evt.target.dataset.loaded !== 'true'
         ) {
           this.setActiveButton(evt);
@@ -212,112 +214,6 @@ class App extends Store {
       (element || window).addEventListener(event, listener);
     });
   }
-
-  // addEventListeners() {
-  //   window.addEventListener('DOMContentLoaded', async () => {
-  //     try {
-  //       Loading.pulse();
-  //       this._state = await this.weatherApi.init();
-  //       this.render();
-  //       Loading.remove();
-  //     } catch (error) {
-  //       this.handleError(error);
-  //     }
-  //   });
-  //   window.addEventListener('hashchange', () => {
-  //     this.renderSliderWeather();
-  //   });
-  //   refs.tempChanger.addEventListener('click', async evt => {
-  //     const { latitude, longitude, countryCode } = this.state;
-  //     if (
-  //       evt.target.nodeName === 'BUTTON' ||
-  //       evt.target.dataset.loaded !== 'true'
-  //     ) {
-  //       this.setActiveButton(evt);
-
-  //       try {
-  //         Loading.pulse();
-  //         const data = await this.weatherApi.getWeather(
-  //           latitude,
-  //           longitude,
-  //           countryCode,
-  //           evt.target.dataset.value
-  //         );
-  //         this._state = { ...this.state, ...data };
-  //         this.render();
-  //         Loading.remove();
-  //       } catch (error) {
-  //         this.handleError();
-  //       }
-  //     }
-  //   });
-  //   refs.input.addEventListener('focus', () => {
-  //     clearHtml(refs.searchedCities);
-  //     this.view.insertHTML(
-  //       refs.searchedCities,
-  //       cityTitleTemplate('Start typing to search for locations')
-  //     );
-  //   });
-  //   refs.input.addEventListener(
-  //     'input',
-  //     debounce(async evt => {
-  //       if (evt.target.value.trim()) {
-  //         try {
-  //           await this.cities.getCities(evt.target.value);
-  //         } catch (error) {
-  //           this.handleError(error);
-  //         }
-  //         if (!this.cities.data) {
-  //           this.view.replaceHTML(
-  //             refs.searchedCities,
-  //             cityTitleTemplate('No locations found')
-  //           );
-  //         } else {
-  //           this.view.replaceHTML(
-  //             refs.searchedCities,
-  //             citiesListTemplate(this.cities.data)
-  //           );
-  //         }
-  //       } else {
-  //         clearHtml(refs.searchedCities);
-  //       }
-  //     }, DEBOUNCE_DELAY)
-  //   );
-  //   refs.searchedCities.addEventListener('click', async evt => {
-  //     if (evt.target.nodeName === 'BUTTON') {
-  //       const {
-  //         country_code: countryCode,
-  //         latitude,
-  //         longitude,
-  //         name: city,
-  //       } = this.cities?.data.find(
-  //         city => city.id === Number(evt.target.dataset.id)
-  //       );
-
-  //       const unit =
-  //         this.state?.current_weather_units?.temperature === '°C'
-  //           ? 'celsius'
-  //           : 'fahrenheit';
-  //       this.clearSearchResults();
-  //       try {
-  //         Loading.pulse();
-  //         const data = await this.weatherApi.getWeather(
-  //           latitude,
-  //           longitude,
-  //           countryCode,
-  //           unit
-  //         );
-  //         this._state = { ...this.state, ...data, city, countryCode };
-  //         this.render();
-  //         Loading.remove();
-  //       } catch (error) {
-  //         this.handleError(error);
-  //       }
-  //     } else {
-  //       this.clearSearchResults();
-  //     }
-  //   });
-  // }
 
   renderMainCard() {
     const { hourly, daily, current_weather, hourly_units, city } = this.state;
