@@ -540,7 +540,7 @@ export const transformDataForMainCard = (
     hourly.windspeed_10m[index],
     hourly_units['windspeed_10m']
   )
-    ? `/${windyDay(windspeed_10m[index], hourly_units['windspeed_10m'])}`
+    ? `/${windyDay(hourly.windspeed_10m[index], hourly_units['windspeed_10m'])}`
     : '';
   const icon = getIconWeather(
     hourly.weathercode[index],
