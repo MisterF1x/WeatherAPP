@@ -1,7 +1,7 @@
-import * as iconsDay from '../assets/images/fill/svg-static/day/*.svg';
-import * as iconsNight from '../assets/images/fill/svg-static/night/*.svg';
-import * as iconsDaily from '../assets/images/fill/svg-static/daily-icons/*.svg';
-import * as uvIndex from '../assets/images/fill/svg-static/uv-index/*.svg';
+import * as iconsDay from '../assets/images/fill/svg/*.svg';
+import * as iconsNight from '../assets/images/fill/svg/*.svg';
+import * as iconsDaily from '../assets/images/fill/svg/*.svg';
+import * as uvIndex from '../assets/images/fill/svg/*.svg';
 import { refs } from './refs';
 import { errorMessage } from './constants';
 import { format, parseISO } from 'date-fns';
