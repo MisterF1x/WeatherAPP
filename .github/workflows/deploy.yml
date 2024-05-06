@@ -15,8 +15,7 @@ jobs:
         run: |
           npm ci
           npm run build
-        env:
-        API_KEY_GEOLOCATION: ${{secrets.API_KEY_GEOLOCATION}}
+        env: ${{secrets.API_KEY_GEOLOCATION}}
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
