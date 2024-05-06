@@ -1,4 +1,6 @@
 name: Build and deploy to GitHub Pages
+env:
+  API_KEY_GEOLOCATION: ${{secrets.API_KEY_GEOLOCATION}}
 
 on:
   push:
@@ -15,8 +17,6 @@ jobs:
         run: |
           npm ci
           npm run build
-        with:
-        envkey_API_KEY_GEOLOCATION: ${{secrets.API_KEY_GEOLOCATION}}
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.0
         with:
