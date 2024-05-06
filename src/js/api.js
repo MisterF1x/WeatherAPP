@@ -156,4 +156,3 @@ export class CitiesApi {
     this.cities = value;
   }
 }
-console.log(`Test ${process.env.API_KEY_GEOLOCATION}`);
