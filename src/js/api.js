@@ -28,8 +28,8 @@ export class GeolocationApi {
   async getGeolocationByIp() {
     const options = {
       params: {
-        api_key: '0a99fae2ae7f4897b5e4f52e3a19db1e',
-        fields: 'latitude,longitude,timezone,city,country_code',
+        apiKey: process.env.API_KEY_GEOLOCATION,
+        // fields: 'latitude,longitude,timezone,city,country_code',
       },
     };
     const {

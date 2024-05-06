@@ -11,7 +11,7 @@ export const errorMessage = Object.freeze({
 });
 
 export const URL = Object.freeze({
-  GEO: 'https://ipgeolocation.abstractapi.com/v1',
+  GEO: 'https://api.ipgeolocation.io/ipgeo',
   WEATHER: 'https://api.open-meteo.com/v1/forecast',
   AIR_QUALITY: 'https://air-quality-api.open-meteo.com/v1/air-quality',
   CITY: 'https://geocoding-api.open-meteo.com/v1/search',
